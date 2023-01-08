@@ -1,5 +1,38 @@
-div {
+.container {
+    display: flexbox;
+}
+
+.home, .register, .login {
     color: white;
     background-color: black;
     text-align: center;
+    margin-top: 50%;
+}
+
+header {
+    flex: 1;
+    color: rgb(255, 255, 255);
+    background-color: rgb(158, 204, 223);
+    height: 10vmin;
+    padding: 11px;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: 2px 1px rgb(10, 10, 10);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.24);
+}
+.content {
+    flex: 8;
+    background-color: green;
+}
+
+footer {
+    flex: 1;
+    background-color: yellow;
+
+}
+
+
+
+#btn-1 {
+    color: black;
 }

@@ -4,13 +4,13 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel');
 
 
-// @desc    Register new user
+// @desc    Sign Up new user
 // @route   POST /api/users
 // @access  public
-const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body
+const signUpUser = asyncHandler(async (req, res) => {
+    const { firstName, lastName, email, password } = req.body
 
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
         res.status(400)
         throw new Error('Please fill all fields')
     }
@@ -27,7 +27,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt)
 
     const user = await User.create({
-        name,
+        firstName,
+        lastName,
         email,
         password: hashedPassword
     })
@@ -35,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (user) {
         res.status(201).json({
             _id: user.id,
-            name: user.name,
+            name: `${user.firstName} ${user.lastName}`,
             email: user.email,
             token: generateToken(user.id),
         })
@@ -46,9 +47,9 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 // @desc    Authinticate a user
-// @route   POST /api/users/login
+// @route   POST /api/users/signup
 // @access  public
-const loginUser = asyncHandler(async (req, res) => {
+const signInUser = asyncHandler(async (req, res) => {
     const {email, password} =  req.body
     
     // Check user
@@ -56,7 +57,7 @@ const loginUser = asyncHandler(async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
         res.json({
             _id: user.id,
-            name: user.name,
+            name: `${user.firstName} ${user.lastName}`,
             email: user.email,
             token: generateToken(user.id),
         })    
@@ -82,4 +83,4 @@ const generateToken = (id) => {
 }
 
 
-module.exports = { registerUser, loginUser, getMe }
+module.exports = { signUpUser, signInUser, getMe }
