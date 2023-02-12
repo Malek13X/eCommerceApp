@@ -13,36 +13,51 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
    };
 
    return (
-      <div
-         className={`absolute -mx-40 mt-10 flex h-48 w-48 flex-wrap rounded-b ${theme.mainBg} border-[0.5px] text-opacity-90 ${theme.borderColor}   shadow-md `}
-      >
-         <div className="flex h-7  items-center justify-between  pb-1  pl-5 pt-8  font-medium capitalize ">
-            {user.name}
-         </div>
-         <div className=" md:text-md  flex flex-wrap pl-5 pt-3 text-sm">
-            <Link
-               to="/"
-               className=" h-8 w-24 rounded-md pt-[5px] pl-2 hover:dark:bg-slate-100  hover:dark:bg-opacity-10"
+      <div className="absolute right-4 top-16 z-[100] ">
+         <div
+            id="dropdownAvatar"
+            className={`w-48  divide-y divide-gray-100 rounded-md border-[0.1px] dark:divide-opacity-60 ${theme.borderColor} ${theme.mainBg} ${theme.textColor} shadow-xl dark:divide-gray-600`}
+         >
+            <div className=" px-4 py-3 text-sm ">
+               <div className="font-bold capitalize">{user.name}</div>
+               <div className="truncate font-medium">{user.email}</div>
+            </div>
+            <ul
+               className="py-2 text-sm "
+               aria-labelledby="dropdownUserAvatarButton"
             >
-               Account
-            </Link>
-            <Link
-               to="/"
-               className=" h-8 w-24 rounded-md pt-[5px] pl-2 hover:dark:bg-slate-100 hover:dark:bg-opacity-10"
-            >
-               Settings
-            </Link>
-            <Link
-               to="/"
-               className=" h-8 w-24 rounded-md pt-[5px] pl-2 hover:dark:bg-slate-100  hover:dark:bg-opacity-10"
-            >
-               About
-            </Link>
-            <div
-               onClick={onSignOutClick}
-               className=" h-8 w-24 rounded-md pt-1  pl-2 hover:dark:bg-slate-100  hover:dark:bg-opacity-10"
-            >
-               Logout
+               <li>
+                  <a
+                     href="#"
+                     className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
+                  >
+                     Account
+                  </a>
+               </li>
+               <li>
+                  <a
+                     href="#"
+                     className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
+                  >
+                     Delivery
+                  </a>
+               </li>
+               <li>
+                  <a
+                     href="#"
+                     className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
+                  >
+                     History
+                  </a>
+               </li>
+            </ul>
+            <div className="py-2">
+               <a
+                  href="#"
+                  className={`block px-4 py-2 text-sm font-medium hover:opacity-80 `}
+               >
+                  Log Out
+               </a>
             </div>
          </div>
       </div>

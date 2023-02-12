@@ -13,7 +13,7 @@ const ThemeMode: React.FC<{ theme: any; size: string}> = ({ theme, size }) => {
    return (
       <div
          id="theme-mode"
-         className={`${size === 'big' ? 'hidden md:block pr-6 pl-2 ' : 'md:hidden block scale-125 ml-5'}
+         className={`${size === 'big' ? 'hidden md:block  pl-4 ' : 'md:hidden block  ml-5'}
          h-fit w-fit items-center justify-center  hover:opacity-80  `}
       >
          {themeMode === 'dark' ? (

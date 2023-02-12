@@ -8,7 +8,6 @@ import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Test from "./pages/Test";
 import { useEffect, useState } from "react";
-import { refreshUser } from "./features/user/authSlice";
 import Nav from "./components/NavBar//Nav";
 import { darkTheme, lightTheme } from "./components/data";
 import { useSelector } from "react-redux";
@@ -20,7 +19,6 @@ const App: React.FC = () => {
   const theme = themeMode === 'dark' ? darkTheme : lightTheme;
   
   useEffect(() => {    
-    refreshUser()  
   }, [])
   
   return (
