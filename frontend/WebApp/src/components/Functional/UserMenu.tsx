@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { signOut } from '../../features/user/authSlice';
 import { Link } from 'react-router-dom';
 import { AppDispatch } from '../../app/store';
+import ThemeMode from './ThemeMode';
 
 const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
    const dispatch = useDispatch<AppDispatch>();
@@ -18,9 +19,16 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
             id="dropdownAvatar"
             className={`w-48  divide-y divide-gray-100 rounded-md border-[0.1px] dark:divide-opacity-60 ${theme.borderColor} ${theme.mainBg} ${theme.textColor} shadow-xl dark:divide-gray-600`}
          >
-            <div className=" px-4 py-3 text-sm ">
-               <div className="font-bold capitalize">{user.name}</div>
-               <div className="truncate font-medium">{user.email}</div>
+            <div className=" text-md px-4 py-3 ">
+               <div className="flex justify-between ">
+                  <div className="font-bold capitalize">{user.name}</div>
+                  <div className="absolute right-3 mt-2">
+                     <ThemeMode size="big" theme={theme} />
+                  </div>
+               </div>
+               <div className="truncate pl-[10px]  text-xs font-medium">
+                  {user.email}
+               </div>
             </div>
             <ul
                className="py-2 text-sm "
@@ -55,6 +63,7 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
                <a
                   href="#"
                   className={`block px-4 py-2 text-sm font-medium hover:opacity-80 `}
+                  onClick={onSignOutClick}
                >
                   Log Out
                </a>

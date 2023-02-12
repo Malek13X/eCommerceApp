@@ -39,27 +39,9 @@ const Nav = () => {
    const { themeMode } = useSelector((state: any) => state.UI);
    const theme = themeMode === 'dark' ? darkTheme : lightTheme;
 
-   const menuRef = useRef<HTMLInputElement>(null);
-
    useEffect(() => {
       localStorage.setItem('themeMode', themeMode);
-
-      const closeOpenMenus = (e: any) => {
-         if (
-            menuRef.current &&
-            isProfileOpen &&
-            !menuRef.current.contains(e.target)
-         ) {
-            setIsProfileOpen(false);
-         }
-      };
-      document.addEventListener('mousedown', closeOpenMenus);
-
-      return () => {
-         document.removeEventListener('mousedown', closeOpenMenus);
-         closeOpenMenus;
-      };
-   }, [user, themeMode]);
+   }, [themeMode]);
 
    return (
       <div className="static  top-0  left-0 right-0  w-full select-none  ">
@@ -97,7 +79,6 @@ const Nav = () => {
             </Link>
 
             <SearchBar theme={theme} size={'big'} />
-            <ThemeMode theme={theme} size="big" />
 
             {/* Right Side of Nav */}
             <div id="nav-right" className="ml-5 mr-2 flex   items-center    ">
@@ -107,10 +88,7 @@ const Nav = () => {
                   <>
                      {user !== null ? (
                         <>
-                           <div
-                              ref={menuRef}
-                              className="hidden bg-opacity-30 md:flex md:pr-1"
-                           >
+                           <div className="hidden bg-opacity-30 md:flex md:pr-1">
                               <div
                                  onClick={() =>
                                     setIsProfileOpen(!isProfileOpen)
@@ -155,7 +133,6 @@ const Nav = () => {
 
          {isMobileNavOpen ? (
             <div
-               ref={menuRef}
                className={`menu ${theme.mainBg} border-b-[1px] dark:bg-opacity-70 ${theme.borderColor} h-fill py-3`}
             >
                <div className="mr-3 ml-3  flex items-center">
