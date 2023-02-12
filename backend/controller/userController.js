@@ -8,17 +8,21 @@ const User = require('../models/userModel');
 // @route   POST /api/users
 // @access  public
 const signUpUser = asyncHandler(async (req, res) => {
-    const { firstName, lastName, email, password } = req.body
+    const firstName = req.body.firstName.toLowerCase()
+    const lastName = req.body.lastName.toLowerCase()
+    const email = req.body.email.toLowerCase()
+    const password = req.body.password
+
 
     if (!firstName || !lastName || !email || !password) {
         res.status(400)
         throw new Error('Please fill all fields')
     }
-
+    
     const userExist = await User.findOne({email})
 
     if (userExist) {
-        res.status(400)
+        res.status(400).json('User already exists')
         throw new Error('User already exists')
     }
 

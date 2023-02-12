@@ -14,7 +14,6 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-
 app.use('/api/users', require('./routes/userRoutes'))
 
 // //  Serve frontend
@@ -29,8 +28,7 @@ app.use('/api/users', require('./routes/userRoutes'))
 // } else {
 //     app.get('/', (req, res) => res.send('Please set to production'))
 // }
- 
-app.use(errorHandler)
+app.use(errorHandler);
 
 app.listen(port, () => console.log(`-Server started on port ${port} `.bgGreen.bold));
 

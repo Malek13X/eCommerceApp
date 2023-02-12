@@ -4,13 +4,13 @@ import { Provider } from 'react-redux'
 
 import './index.css'
 import App from './App'
-import { store } from './store'
+import { store } from './app/store'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLDivElement
 )
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'development') {
   import('../mocks/browser')
     .then(({ worker }) => {
       worker.start()

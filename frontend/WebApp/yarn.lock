@@ -825,7 +825,7 @@
     "outvariant" "^1.2.1"
     "strict-event-emitter" "^0.2.0"
 
-"@mui/base@^5.0.0-alpha.112", "@mui/base@5.0.0-alpha.112":
+"@mui/base@5.0.0-alpha.112":
   "integrity" "sha512-KPwb1iYPXsV/P8uu0SNQrj7v7YU6wdN4Eccc2lZQyRDW+f6PJYjHBuFUTYKc408B98Jvs1XbC/z5MN45a2DWrQ=="
   "resolved" "https://registry.npmjs.org/@mui/base/-/base-5.0.0-alpha.112.tgz"
   "version" "5.0.0-alpha.112"
@@ -2595,6 +2595,16 @@
     "@babel/core" "^7.12.17"
     "@babel/plugin-transform-modules-commonjs" "^7.12.13"
     "babel-jest" "^26.6.3"
+
+"esbuild-linux-64@^0.15.18":
+  "integrity" "sha512-hNSeP97IviD7oxLKFuii5sDPJ+QHeiFTFLoLm7NZQligur8poNOWGIgpQ7Qf8Balb69hptMZzyOBIPtY09GZYw=="
+  "resolved" "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.15.18.tgz"
+  "version" "0.15.18"
+
+"esbuild-linux-64@0.14.30":
+  "integrity" "sha512-LUnpzoMpRqFON5En4qEj6NWiyH6a1K+Y2qYNKrCy5qPTjDoG/EWeqMz69n8Uv7pRuvDKl3FNGJ1dufTrA5i0sw=="
+  "resolved" "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.14.30.tgz"
+  "version" "0.14.30"
 
 "esbuild-windows-64@0.14.30":
   "integrity" "sha512-DHgITeUhPAnN9I5O6QBa1GVyPOhiYCn4S4TtQr7sO4+X0LNyqnlmA1M0qmGkUdDC1QQfjI8uQ4G/whdWb2pWIQ=="
