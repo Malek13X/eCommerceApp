@@ -17,14 +17,12 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
       <div className="absolute right-4 top-16 z-[100] ">
          <div
             id="dropdownAvatar"
-            className={`w-48  divide-y divide-gray-100 rounded-md border-[0.1px] dark:divide-opacity-60 ${theme.borderColor} ${theme.mainBg} ${theme.textColor} shadow-xl dark:divide-gray-600`}
+            className={`w-48  divide-y divide-gray-100 rounded-sm  dark:divide-opacity-60 ${theme.borderColor} ${theme.mainBg} ${theme.textColor} shadow-xl dark:divide-gray-600`}
          >
             <div className=" text-md px-4 py-3 ">
                <div className="flex justify-between ">
                   <div className="font-bold capitalize">{user.name}</div>
-                  <div className="absolute right-3 mt-2">
-                     <ThemeMode size="big" theme={theme} />
-                  </div>
+               
                </div>
                <div className="truncate pl-[10px]  text-xs font-medium">
                   {user.email}

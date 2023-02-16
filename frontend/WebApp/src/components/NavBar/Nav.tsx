@@ -18,6 +18,7 @@ import SearchBar from './SearchBar';
 import ThemeMode from '../Functional/ThemeMode';
 import Cart from '../Functional/Cart';
 import UserMenu from '../Functional/UserMenu';
+import SignDropdown from './SignDropDown';
 
 const Nav = () => {
    const links = [
@@ -47,11 +48,11 @@ const Nav = () => {
       <div className="static  top-0  left-0 right-0  w-full select-none  ">
          <header
             id="navbar"
-            className={`  flex items-center justify-between py-3 ${theme.bgColor} ${theme.textColor} border-b-[1px] ${theme.borderColor}`}
+            className={`  flex items-center justify-between py-3  px-2 ${theme.bgColor} ${theme.textColor} border-b ${theme.borderColor}`}
          >
             <div
                id="moblie-nav"
-               className={` 0 ml-2 flex h-10 w-10 items-center justify-center  rounded-md hover:opacity-80 md:hidden`}
+               className={` ml-3 flex h-10 w-10 items-center justify-between  rounded-sm hover:opacity-80 md:hidden`}
             >
                {isMobileNavOpen ? (
                   <MdClose
@@ -68,34 +69,37 @@ const Nav = () => {
                )}
             </div>
 
-            <Link to="/">
-               <div
-                  id="title"
-                  className="items-center  text-4xl font-bold  md:pr-10 md:pl-5 lg:pl-5  "
-               >
-                  <span className="text-4xl  ">&#9428;</span>
-                  |Shop
-               </div>
+            <Link
+               to="/"
+               id="title"
+               className="text-4xl font-bold  md:px-3"
+            >
+               eShop
             </Link>
 
-            <SearchBar theme={theme} size={'big'} />
+            <div className="hidden md:flex w-9/12 items-center">
+               <SearchBar theme={theme} size={'big'} />
+               <div className="pl-3">
+                  <ThemeMode theme={theme} size="big" />
+               </div>
+            </div>
 
             {/* Right Side of Nav */}
-            <div id="nav-right" className="ml-5 mr-2 flex   items-center    ">
+            <div id="nav-right" className="mr-1 flex   items-center    ">
                <Cart theme={theme} />
 
                {!isMobileNavOpen ? (
                   <>
-                     {user !== null ? (
+                     {user ? (
                         <>
                            <div className="hidden bg-opacity-30 md:flex md:pr-1">
                               <div
                                  onClick={() =>
                                     setIsProfileOpen(!isProfileOpen)
                                  }
-                                 className={`cursor-check flex h-9 w-9 cursor-pointer items-center rounded-full border-2 ${theme.borderColor} ${theme.bgColor} justify-center ${theme.hoverColor} ${theme.hoverTextColor}   `}
+                                 className={`cursor-check flex h-10 w-10 cursor-pointer items-center rounded-sm border-2 ${theme.borderColor} ${theme.bgColor} justify-center ${theme.hoverColor} ${theme.hoverTextColor}   `}
                               >
-                                 <div className=" text-xl font-medium capitalize ">
+                                 <div className=" text-2xl font-medium capitalize ">
                                     {user.name[0]}
                                  </div>
                               </div>
@@ -108,21 +112,9 @@ const Nav = () => {
                            </div>
                         </>
                      ) : (
-                        <div className="hidden whitespace-nowrap md:flex">
-                           <Link
-                              to={'/sign-in'}
-                              className={` cursor-check flex cursor-pointer items-center rounded px-2  py-1 text-sm  hover:dark:bg-slate-100 hover:dark:bg-opacity-10 `}
-                           >
-                              <span className="mx-1">Sign in</span>
-                           </Link>
-
-                           <Link
-                              to={'/sign-up'}
-                              className={`cursor-check flex cursor-pointer items-center rounded px-2  py-1 text-sm  hover:dark:bg-slate-100 hover:dark:bg-opacity-10 `}
-                           >
-                              <span className="mx-1">Sign up</span>
-                           </Link>
-                        </div>
+                        <>
+                           <SignDropdown theme={theme} />
+                        </>
                      )}
                   </>
                ) : (
@@ -139,12 +131,13 @@ const Nav = () => {
                   <SearchBar theme={theme} size={'small'} />
                   <ThemeMode theme={theme} size="small" />
                </div>
-               {user !== null ? (
+               {user ? (
                   <>
-                     <div className="font bold ml-2 flex justify-center p-3 text-2xl font-bold capitalize">
+                     <div className="font bold ml-4 flex justify-center p-3 text-2xl font-bold capitalize">
                         <span>{user.name}</span>
                         <BiUserCircle className="ml-2 h-7 w-7" />
                      </div>
+                        <div className={` -mt-1 mb-5 mx-10 border-b ${theme.borderColor} opacity-30`} />
 
                      <div className={` text-center text-lg opacity-90`}>
                         <div
@@ -177,20 +170,29 @@ const Nav = () => {
                      </div>
                   </>
                ) : (
-                  <div className="hidden whitespace-nowrap md:flex ">
-                     <Link
-                        to={'/sign-in'}
-                        className={` cursor-check flex cursor-pointer items-center rounded px-2  py-1 text-sm  hover:dark:bg-slate-100 hover:dark:bg-opacity-10 `}
-                     >
-                        <span className="mx-1">Sign in</span>
-                     </Link>
+                  <div className="  mt-2 text-center text-lg opacity-90">
+                     <div className="font bold ml-2 flex justify-center p-3 text-2xl font-bold capitalize">
+                        Guest
+                        <BiUserCircle className="ml-2 h-7 w-7" />
+                     </div>
+                     <div className={` -mt-1 mb-7 mx-10 border-b ${theme.borderColor} opacity-30`} />
+                     <div>
+                        <Link
+                           to={'/sign-in'}
+                           className={`cursor-check block h-10  cursor-pointer hover:opacity-50`}
+                        >
+                           Sign in
+                        </Link>
+                     </div>
 
-                     <Link
-                        to={'/sign-up'}
-                        className={`cursor-check flex cursor-pointer items-center rounded px-2  py-1 text-sm  hover:dark:bg-slate-100 hover:dark:bg-opacity-10 `}
-                     >
-                        <span className="mx-1">Sign up</span>
-                     </Link>
+                     <div>
+                        <Link
+                           to={'/sign-up'}
+                           className={`cursor-check block h-10  cursor-pointer hover:opacity-50`}
+                        >
+                           Sign up
+                        </Link>
+                     </div>
                   </div>
                )}
             </div>

@@ -7,21 +7,21 @@ const SearchBar: React.FC<{ theme: any; size: string }> = ({ theme, size }) => {
          <div
             className={`relative ${
                size === 'big'
-                  ? 'hidden w-8/12 md:block'
+                  ? 'hidden w-full md:block '
                   : 'block w-full md:hidden mx-auto'
             } `}
          >
             <input
                type="search"
                id="search-dropdown"
-               className={`z-20 block w-full rounded-md p-2.5  md:py-3  md:my-0 text-sm font-medium text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400`}
+               className={`z-20 block w-full rounded-sm   text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400`}
                placeholder="Search Product..."
-               required
+               required 
             />
 
             <button
                type="submit"
-               className="absolute top-0 right-0 h-full rounded-r-md bg-slate-600 p-2.5 text-[#eeeeee] hover:bg-opacity-90"
+               className="absolute top-0 right-0 h-full rounded-r-sm bg-slate-600 p-2.5 text-[#eeeeee] hover:bg-opacity-90"
             >
                <svg
                   aria-hidden="true"

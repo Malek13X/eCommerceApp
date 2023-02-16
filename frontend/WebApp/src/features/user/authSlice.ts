@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
+import { parse } from 'dotenv';
 
-const user = localStorage.getItem('user') || '{}';
+const user = localStorage.getItem('user') || 'object';
 const parsedUser = user !== 'object' ? JSON.parse(user) : null;
 
 const initialState = {
@@ -94,6 +95,7 @@ export const authSlice = createSlice({
             state.message = action.payload as string;
             state.user = null;
          })
+      
          .addCase(signOut.fulfilled, (state) => {
             state.user = null;
             state.isError = false;

@@ -12,6 +12,7 @@ import Nav from "./components/NavBar//Nav";
 import { darkTheme, lightTheme } from "./components/data";
 import { useSelector } from "react-redux";
 
+
 const App: React.FC = () => {
   const { data, error, isLoading } = useGetDocsListQuery()
   const {themeMode} = useSelector((state:any) => state.UI);
@@ -19,6 +20,7 @@ const App: React.FC = () => {
   const theme = themeMode === 'dark' ? darkTheme : lightTheme;
   
   useEffect(() => {    
+
   }, [])
   
   return (

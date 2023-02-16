@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/NavBar/SearchBar';
 import UserMenu from '../components/Functional/UserMenu';
+import SignDropdown from '../components/NavBar/SignDropDown';
 
 const Test: React.FC<{ theme: iTheme }> = ({ theme }) => {
    const paragraphs = [
@@ -52,6 +53,7 @@ const Test: React.FC<{ theme: iTheme }> = ({ theme }) => {
                   >
                      Upto 50% Discount On All Of These Items
                   </div>
+                  
                   <div className="flex  items-end">
                      <div
                         className={`${theme.borderColor} h-10 w-10 rounded-full bg-gray-500  text-gray-500 hover:h-32 hover:w-32  md:h-20 md:w-20`}

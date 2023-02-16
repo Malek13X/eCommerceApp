@@ -3,6 +3,7 @@ require('colors');
 const path = require('path')
 const cors = require('cors');
 const express = require('express');
+const session = require('express-session');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const port = process.env.PORT || 5000;
@@ -14,6 +15,16 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+
+// Session middleware
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true if using HTTPS
+  }));
+
 app.use('/api/users', require('./routes/userRoutes'))
 
 // //  Serve frontend

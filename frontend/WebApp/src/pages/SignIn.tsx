@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn, reset } from '../features/user/authSlice';
 import { AppDispatch } from '../app/store';
-import { toast } from 'react-toastify';
+import { darkTheme, lightTheme } from '../components/data';
 
 export default function SignIn() {
    const [formData, setFormData] = useState({
       email: '',
       password: ''
    });
+   const [errorMessage, setErrorMessage] = useState('');
 
    const { email, password } = formData;
 
@@ -20,16 +21,18 @@ export default function SignIn() {
       (state: any) => state.auth || {}
    );
 
+   
+   // Change theme mode
+   const { themeMode } = useSelector((state: any) => state.UI);
+   const theme = themeMode === 'dark' ? darkTheme : lightTheme;
+
    useEffect(() => {
       if (isError) {
-         toast.error(message, { toastId: 'errorId1' });
+         setErrorMessage(message);
       }
 
       if (isSuccess) {
          navigate('/');
-         toast.success(`Hello ${user.name.split(' ')[0]}!`, {
-            toastId: 'signInMessage'
-         });
       }
 
       if (user) {
@@ -62,14 +65,15 @@ export default function SignIn() {
    return (
       <section className="relative flex flex-wrap items-center justify-center">
          <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
-            <div className="rounded-lg bg-slate-200 p-10 shadow-md">
+            <div className={`rounded-sm ${theme.mainBg} p-10 shadow-md`}>
                {/* Sign in heading */}
                <div className="mx-auto max-w-lg text-center">
                   <h1 className="text-2xl font-bold sm:text-3xl">
                      Sign in, and start shopping!
                   </h1>
+
                   {/* Empty space */}
-                  <p className="mt-4 text-gray-500"></p>
+                  <p className="mt-4 text-red-500">- {errorMessage}</p>
                </div>
 
                {/* Sign in form */}
@@ -86,7 +90,7 @@ export default function SignIn() {
                      <input
                         type="email"
                         name="email"
-                        className="pr- w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                        className="w-full rounded-sm border-gray-200 p-4 text-sm shadow-sm block  text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400"
                         placeholder="Enter email"
                         onChange={onChange}
                      />
@@ -117,7 +121,8 @@ export default function SignIn() {
                      <input
                         type="password"
                         name="password"
-                        className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
+                        className="w-full rounded-sm border-gray-200 p-4 text-sm shadow-sm block  text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400"
+
                         placeholder="Enter password"
                         onChange={onChange}
                      />
@@ -161,7 +166,7 @@ export default function SignIn() {
                      {/* Submit button */}
                      <button
                         type="submit"
-                        className="ml-3 inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white shadow-md"
+                        className="ml-3 inline-block rounded-sm bg-blue-500 px-5 py-3 text-sm font-medium text-white shadow-md"
                      >
                         Sign in
                      </button>
