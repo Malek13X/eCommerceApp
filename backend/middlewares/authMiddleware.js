@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel2");
+const User = require("../models/userModel");
+const rateLimit = require("express-rate-limit");
 
 const protect = asyncHandler(async (req, res, next) => {
    let token;
@@ -12,13 +13,13 @@ const protect = asyncHandler(async (req, res, next) => {
       try {
          token = req.headers.authorization.split(" ")[1];
 
-         const decoded = jwt.verify(token, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRATION_TIME,
-         });
+         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
          req.user = await User.findById(decoded.id).select("-password");
 
-         if (decoded.exp * 1000 < Date.now()) {
+         // check if the token has expired
+         if (decoded.exp < Date.now() / 1000) {
+            res.status(401);
             throw new Error("Token has expired");
          }
 
@@ -45,4 +46,12 @@ const admin = (req, res, next) => {
    }
 };
 
-module.exports = { protect, admin };
+// Rate limiting middleware, to prevent Brute-Force attacks
+const authLimiter = rateLimit({
+   windowMs: 15 * 60 * 1000, // 15 minutes
+   max: 5, // limit each IP to 5 requests per windowMs
+   message: "Too many login attempts. Please try again later.",
+});
+
+
+module.exports = { protect, admin, authLimiter };

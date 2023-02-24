@@ -21,11 +21,7 @@ import UserMenu from '../Functional/UserMenu';
 import SignDropdown from './SignDropDown';
 
 const Nav = () => {
-   const links = [
-      { name: 'Home', link: '/' },
-      { name: 'Categories', link: '/test' },
-      { name: 'Delivery', link: '/sign-in' }
-   ];
+   
    const dispatch = useDispatch<AppDispatch>();
 
    const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -48,7 +44,7 @@ const Nav = () => {
       <div className="static  top-0  left-0 right-0  w-full select-none  ">
          <header
             id="navbar"
-            className={`  flex items-center justify-between py-3  px-2 ${theme.bgColor} ${theme.textColor} border-b ${theme.borderColor}`}
+            className={`  flex items-center justify-between py-3  md:px-8  px-3 ${theme.bgColor} ${theme.textColor} border-b ${theme.borderColor}`}
          >
             <div
                id="moblie-nav"
@@ -66,18 +62,14 @@ const Nav = () => {
                      className="cursor-check h-9 w-9 cursor-pointer"
                      onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
                   />
-               )}
+               )} 
             </div>
 
-            <Link
-               to="/"
-               id="title"
-               className="text-4xl font-bold  md:px-3"
-            >
+            <Link to="/" id="title" className="md:text-5xl text-4xl font-bold  md:px-3">
                eShop
             </Link>
 
-            <div className="hidden md:flex w-9/12 items-center">
+            <div className="hidden w-9/12 items-center md:flex">
                <SearchBar theme={theme} size={'big'} />
                <div className="pl-3">
                   <ThemeMode theme={theme} size="big" />
@@ -137,7 +129,9 @@ const Nav = () => {
                         <span>{user.name}</span>
                         <BiUserCircle className="ml-2 h-7 w-7" />
                      </div>
-                        <div className={` -mt-1 mb-5 mx-10 border-b ${theme.borderColor} opacity-30`} />
+                     <div
+                        className={` mx-10 -mt-1 mb-5 border-b ${theme.borderColor} opacity-30`}
+                     />
 
                      <div className={` text-center text-lg opacity-90`}>
                         <div
@@ -175,10 +169,12 @@ const Nav = () => {
                         Guest
                         <BiUserCircle className="ml-2 h-7 w-7" />
                      </div>
-                     <div className={` -mt-1 mb-7 mx-10 border-b ${theme.borderColor} opacity-30`} />
+                     <div
+                        className={` mx-10 -mt-1 mb-7 border-b ${theme.borderColor} opacity-30`}
+                     />
                      <div>
                         <Link
-                           to={'/sign-in'}
+                           to={'/signin'}
                            className={`cursor-check block h-10  cursor-pointer hover:opacity-50`}
                         >
                            Sign in
@@ -187,7 +183,7 @@ const Nav = () => {
 
                      <div>
                         <Link
-                           to={'/sign-up'}
+                           to={'/signup'}
                            className={`cursor-check block h-10  cursor-pointer hover:opacity-50`}
                         >
                            Sign up

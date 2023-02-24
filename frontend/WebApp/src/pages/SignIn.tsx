@@ -21,7 +21,6 @@ export default function SignIn() {
       (state: any) => state.auth || {}
    );
 
-   
    // Change theme mode
    const { themeMode } = useSelector((state: any) => state.UI);
    const theme = themeMode === 'dark' ? darkTheme : lightTheme;
@@ -60,7 +59,7 @@ export default function SignIn() {
       }));
    };
 
-   const navToSignUp = () => navigate('/sign-up');
+   const navToSignUp = () => navigate('/signup');
 
    return (
       <section className="relative flex flex-wrap items-center justify-center">
@@ -73,7 +72,10 @@ export default function SignIn() {
                   </h1>
 
                   {/* Empty space */}
-                  <p className="mt-4 text-red-500">- {errorMessage}</p>
+                  <p className="mt-4 text-red-500">
+                     {' '}
+                     {errorMessage ? '- ' + errorMessage : ' '}
+                  </p>
                </div>
 
                {/* Sign in form */}
@@ -90,7 +92,7 @@ export default function SignIn() {
                      <input
                         type="email"
                         name="email"
-                        className="w-full rounded-sm border-gray-200 p-4 text-sm shadow-sm block  text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400"
+                        className="block w-full rounded-sm border-gray-200 p-4 text-sm text-slate-700  shadow-sm focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400"
                         placeholder="Enter email"
                         onChange={onChange}
                      />
@@ -121,8 +123,7 @@ export default function SignIn() {
                      <input
                         type="password"
                         name="password"
-                        className="w-full rounded-sm border-gray-200 p-4 text-sm shadow-sm block  text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400"
-
+                        className="block w-full rounded-sm border-gray-200 p-4 text-sm text-slate-700  shadow-sm focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400"
                         placeholder="Enter password"
                         onChange={onChange}
                      />

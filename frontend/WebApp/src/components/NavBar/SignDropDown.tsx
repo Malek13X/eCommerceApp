@@ -45,7 +45,7 @@ const SignDropdown: React.FC<SignDropDownProps> = ({ theme }) => {
             >
                <div className="py-1" role="none">
                   <Link
-                     to={'/sign-in'}
+                     to={'/signin'}
                      className={`cursor-check block cursor-pointer px-4  py-2 text-sm hover:opacity-80 `}
                      role="menuitem"
                   >
@@ -54,7 +54,7 @@ const SignDropdown: React.FC<SignDropDownProps> = ({ theme }) => {
                   <div className={` mx-2 border-b ${theme.borderColor} opacity-30`} />
 
                   <Link
-                     to={'/sign-up'}
+                     to={'/signup'}
                      className={`cursor-check block cursor-pointer px-4  py-2 text-sm hover:opacity-80 `}
                      role="menuitem"
                   >

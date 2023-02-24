@@ -48,7 +48,7 @@ export default function SignUp() {
       }
 
       dispatch(reset());
-   }, [user, isError, isSuccess, message, dispatch, navigate]);
+   }, [user, isError, isSuccess, message, dispatch, navigate, errorMessage]);
 
    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -73,16 +73,20 @@ export default function SignUp() {
       }));
    };
 
-   const navToSignIn = () => navigate('/sign-in');
+   const navToSignIn = () => navigate('/signin');
    return (
       <section className="relative flex flex-wrap    items-center justify-center">
          <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
             <div className={`rounded-sm ${theme.mainBg} p-10  shadow-md`}>
                <div className="mx-auto max-w-lg text-center">
-                  <div className="text-2xl whitespace-nowrap font-bold  sm:text-3xl">
+                  <div className="whitespace-nowrap text-2xl font-bold  sm:text-3xl">
                      Sign up, and start shopping!
                   </div>
-                  <p className="mt-4 text-red-500">- {errorMessage}</p>
+
+                  <p className="mt-4 text-red-500">
+                     {' '}
+                     {errorMessage ? errorMessage : ' '}
+                  </p>
                </div>
 
                <form
@@ -230,7 +234,7 @@ export default function SignUp() {
                            placeholder="Confirm Password"
                            onChange={onChange}
                         />
-                        <span className="absolute inset-y-0 -mt-[3px] right-2 inline-flex items-center ">
+                        <span className="absolute inset-y-0 right-2 -mt-[3px] inline-flex items-center ">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-5 w-5 text-slate-800"
@@ -267,7 +271,7 @@ export default function SignUp() {
                      </p>
                      <button
                         type="submit"
-                        className="ml-3 inline-block rounded-sm whitespace-nowrap bg-blue-500 px-5 py-3 text-sm font-medium text-white shadow-md"
+                        className="ml-3 inline-block whitespace-nowrap rounded-sm bg-blue-500 px-5 py-3 text-sm font-medium text-white shadow-md"
                      >
                         Sign Up
                      </button>

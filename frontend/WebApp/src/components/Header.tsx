@@ -139,10 +139,10 @@ function Header() {
                                 : 
                                 <>
                                           
-                                          <Link  to={'/sign-in'} className={`px-2 py-1 flex items-center cursor-pointer  hover:dark:bg-slate-100 hover:dark:bg-opacity-10  text-sm rounded `}>                            
+                                          <Link  to={'/signin'} className={`px-2 py-1 flex items-center cursor-pointer  hover:dark:bg-slate-100 hover:dark:bg-opacity-10  text-sm rounded `}>                            
                                             <span className="mx-1">Sign in</span>
                                           </Link>
-                                          <Link  to={'/sign-up'} className={`px-2 py-1 flex items-center cursor-pointer  hover:dark:bg-slate-100 hover:dark:bg-opacity-10  text-sm rounded `}>
+                                          <Link  to={'/signup'} className={`px-2 py-1 flex items-center cursor-pointer  hover:dark:bg-slate-100 hover:dark:bg-opacity-10  text-sm rounded `}>
                                             <span className="mx-1">Sign up</span>
                                           </Link>
 

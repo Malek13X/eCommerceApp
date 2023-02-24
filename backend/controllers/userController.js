@@ -1,45 +1,46 @@
-const asyncHandler = require('express-async-handler');
-const User = require('../models/userModel');
-const generateToken = require('../utils/generateToken');
-const bcrypt = require('bcryptjs');
+const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel");
+const generateToken = require("../utils/generateToken");
+const bcrypt = require("bcryptjs");
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
 // @access  Public
-const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+const loginUser = asyncHandler(async (req, res) => {
+   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+   const user = await User.findOne({ email });
 
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
-  }
+   if (user && (await bcrypt.compare(password, user.password))) {
+      res.json({
+         _id: user._id,
+         name: `${user.firstName} ${user.lastName}`,
+         email: user.email,
+         isAdmin: user.isAdmin,
+         token: generateToken(user._id),
+      });
+   } else {
+      res.status(401);
+      throw new Error("Invalid email or password");
+   }
 });
 
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-   const { name, email, password } = req.body;
+   const { firstName, lastName, email, password } = req.body;
 
    const userExists = await User.findOne({ email });
 
    if (userExists) {
       res.status(400);
-      throw new Error("User already exists");
+      throw new Error("Email already exists");
    }
 
    const user = await User.create({
-      name,
+      firstName,
+      lastName,
       email,
       password,
    });
@@ -47,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
    if (user) {
       res.status(201).json({
          _id: user._id,
-         name: user.name,
+         name: `${user.firstName} ${user.lastName}`,
          email: user.email,
          isAdmin: user.isAdmin,
          token: generateToken(user._id),
@@ -168,7 +169,7 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-   authUser,
+   loginUser,
    registerUser,
    getUserProfile,
    updateUserProfile,

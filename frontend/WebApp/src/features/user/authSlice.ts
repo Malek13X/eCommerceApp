@@ -26,6 +26,7 @@ export const signUp = createAsyncThunk(
                error.response.data.message) ||
             error.message ||
             error.toString();
+
          return thunkAPI.rejectWithValue(message);
       }
    }
@@ -95,7 +96,7 @@ export const authSlice = createSlice({
             state.message = action.payload as string;
             state.user = null;
          })
-      
+
          .addCase(signOut.fulfilled, (state) => {
             state.user = null;
             state.isError = false;

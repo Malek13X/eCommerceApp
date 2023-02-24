@@ -11,12 +11,12 @@ export const navLinks = [
    },
    {
       title: 'Nav 1',
-      link: '/sign-in',
+      link: '/signin',
       icon: <HiTemplate />
    },
    {
       title: 'Nav 2',
-      link: '/sign-up',
+      link: '/signup',
       icon: <AiFillCrown />
    },
    {
