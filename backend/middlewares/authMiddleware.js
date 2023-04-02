@@ -5,7 +5,6 @@ const rateLimit = require("express-rate-limit");
 
 const protect = asyncHandler(async (req, res, next) => {
    let token;
-
    if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -16,7 +15,6 @@ const protect = asyncHandler(async (req, res, next) => {
          const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
          req.user = await User.findById(decoded.id).select("-password");
-
          // check if the token has expired
          if (decoded.exp < Date.now() / 1000) {
             res.status(401);
@@ -52,6 +50,5 @@ const authLimiter = rateLimit({
    max: 5, // limit each IP to 5 requests per windowMs
    message: "Too many login attempts. Please try again later.",
 });
-
 
 module.exports = { protect, admin, authLimiter };

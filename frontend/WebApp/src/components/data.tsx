@@ -31,7 +31,7 @@ export const lightTheme = {
    secondaryColor: 'slate-700',
    borderColor: 'border-slate-600',
    bgColor: 'bg-[#eeeeee]',
-   mainBg: 'bg-gray-200',
+   mainBg: 'bg-slate-300',
 
    textColor: 'text-slate-700',
    hoverColor: 'hover:bg-slate-700',

@@ -8,6 +8,7 @@ const signUp = async (userData: any) => {
 
    if (response.data) {
       localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem('token', response.data.token);
    }
    return response.data;
 };
@@ -18,6 +19,7 @@ const signIn = async (userData: any) => {
 
    if (response.data) {
       localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem('token', response.data.token);
    }
 
    return response.data;
@@ -28,10 +30,31 @@ const signOut = async () => {
    localStorage.removeItem('user');
 };
 
+// Update user profile
+const updateUserProfile = async (userData: any, token: any) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`
+      }
+   };
+   console.log(token);
+
+   const response = await axios.put(API_URL + '/profile', userData, config);
+
+   if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem('token', response.data.token);
+
+      return response.data;
+   }
+};
+
 const authService = {
    signUp,
    signIn,
-   signOut
+   signOut,
+   updateUserProfile
 };
 
 export default authService;

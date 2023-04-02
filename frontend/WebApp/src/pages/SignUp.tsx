@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUp, reset } from '../features/user/authSlice';
 import { AppDispatch } from '../app/store';
-import { darkTheme, lightTheme } from '../components/data';
 
-export default function SignUp() {
+const SignUp: React.FC<{ theme: any }> = ({ theme }) => {
    const [formData, setFormData] = useState({
       firstName: '',
       lastName: '',
@@ -25,10 +24,6 @@ export default function SignUp() {
    const { user, isError, isSuccess, isLoading, message } = useSelector(
       (state: any) => state.auth || {}
    );
-
-   // Change theme mode
-   const { themeMode } = useSelector((state: any) => state.UI);
-   const theme = themeMode === 'dark' ? darkTheme : lightTheme;
 
    useEffect(() => {
       if (isError) {
@@ -186,6 +181,7 @@ export default function SignUp() {
                            </svg>
                         </span>
                      </div>
+                     password
                   </div>
 
                   <div className="flex ">
@@ -281,4 +277,5 @@ export default function SignUp() {
          </div>
       </section>
    );
-}
+};
+export default SignUp;

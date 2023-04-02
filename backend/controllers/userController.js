@@ -16,7 +16,8 @@ const loginUser = asyncHandler(async (req, res) => {
          _id: user._id,
          name: `${user.firstName} ${user.lastName}`,
          email: user.email,
-         isAdmin: user.isAdmin,
+         phone: user.phone,
+         role: user.role,
          token: generateToken(user._id),
       });
    } else {
@@ -50,7 +51,8 @@ const registerUser = asyncHandler(async (req, res) => {
          _id: user._id,
          name: `${user.firstName} ${user.lastName}`,
          email: user.email,
-         isAdmin: user.isAdmin,
+         phone: user.phone,
+         role: user.role,
          token: generateToken(user._id),
       });
    } else {
@@ -68,9 +70,11 @@ const getUserProfile = asyncHandler(async (req, res) => {
    if (user) {
       res.json({
          _id: user._id,
-         name: user.name,
+         name: `${user.firstName} ${user.lastName}`,
          email: user.email,
-         isAdmin: user.isAdmin,
+         phone: user.phone,
+         role: user.role,
+         token: generateToken(user._id),
       });
    } else {
       res.status(404);
@@ -85,8 +89,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
    const user = await User.findById(req.user._id);
 
    if (user) {
-      user.name = req.body.name || user.name;
+      user.firstName = req.body.firstName || user.firstName;
+      user.lastName = req.body.lastName || user.lastName;
       user.email = req.body.email || user.email;
+      user.phone = req.body.phone || user.phone;
+
       if (req.body.password) {
          user.password = req.body.password;
       }
@@ -95,9 +102,10 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
       res.json({
          _id: updatedUser._id,
-         name: updatedUser.name,
+         name: `${updatedUser.firstName} ${updatedUser.lastName}`,
          email: updatedUser.email,
-         isAdmin: updatedUser.isAdmin,
+         phone: updatedUser.phone,
+         role: updatedUser.role,
          token: generateToken(updatedUser._id),
       });
    } else {
@@ -123,6 +131,7 @@ const deleteUser = asyncHandler(async (req, res) => {
    if (user) {
       await user.remove();
       res.json({ message: "User removed" });
+      
    } else {
       res.status(404);
       throw new Error("User not found");
@@ -151,8 +160,7 @@ const updateUser = asyncHandler(async (req, res) => {
    if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      user.isAdmin =
-         req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin;
+      user.role = req.body.role === undefined ? user.role : req.body.role;
 
       const updatedUser = await user.save();
 
@@ -160,7 +168,7 @@ const updateUser = asyncHandler(async (req, res) => {
          _id: updatedUser._id,
          name: updatedUser.name,
          email: updatedUser.email,
-         isAdmin: updatedUser.isAdmin,
+         role: updatedUser.role,
       });
    } else {
       res.status(404);

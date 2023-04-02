@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useInRouterContext, useNavigate } from 'react-router-dom';
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,8 +21,8 @@ import UserMenu from '../Functional/UserMenu';
 import SignDropdown from './SignDropDown';
 
 const Nav = () => {
-   
    const dispatch = useDispatch<AppDispatch>();
+   const navigate = useNavigate();
 
    const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
@@ -32,19 +32,26 @@ const Nav = () => {
    // Get user from State
    const { user } = useSelector((state: any) => state.auth);
 
+   const token = localStorage.getItem('token');
+
    // Change theme mode
    const { themeMode } = useSelector((state: any) => state.UI);
    const theme = themeMode === 'dark' ? darkTheme : lightTheme;
 
    useEffect(() => {
+      if (!token) {
+         dispatch(signOut());
+         navigate('/');
+      }
+
       localStorage.setItem('themeMode', themeMode);
-   }, [themeMode]);
+   }, [themeMode, token, user]);
 
    return (
       <div className="static  top-0  left-0 right-0  w-full select-none  ">
          <header
             id="navbar"
-            className={`  flex items-center justify-between py-3  md:px-8  px-3 ${theme.bgColor} ${theme.textColor} border-b ${theme.borderColor}`}
+            className={`  flex items-center justify-between py-3  px-3  md:px-4 ${theme.bgColor} ${theme.textColor} border-b ${theme.borderColor}`}
          >
             <div
                id="moblie-nav"
@@ -62,17 +69,21 @@ const Nav = () => {
                      className="cursor-check h-9 w-9 cursor-pointer"
                      onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
                   />
-               )} 
+               )}
             </div>
 
-            <Link to="/" id="title" className="md:text-5xl text-4xl font-bold  md:px-3">
+            <Link
+               to="/"
+               id="title"
+               className="text-4xl font-bold md:pl-1 md:pr-10 md:text-5xl"
+            >
                eShop
             </Link>
 
             <div className="hidden w-9/12 items-center md:flex">
                <SearchBar theme={theme} size={'big'} />
                <div className="pl-3">
-                  <ThemeMode theme={theme} size="big" />
+                  <ThemeMode size="big" style="md:pr-6   " />
                </div>
             </div>
 
@@ -121,7 +132,8 @@ const Nav = () => {
             >
                <div className="mr-3 ml-3  flex items-center">
                   <SearchBar theme={theme} size={'small'} />
-                  <ThemeMode theme={theme} size="small" />
+
+                  <ThemeMode size="small" style="" />
                </div>
                {user ? (
                   <>

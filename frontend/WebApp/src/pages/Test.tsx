@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { iTheme, darkTheme, lightTheme, navLinks } from '../components/data';
 import { AiOutlineMenuUnfold, AiOutlineMenuFold } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
@@ -7,7 +6,7 @@ import SearchBar from '../components/NavBar/SearchBar';
 import UserMenu from '../components/Functional/UserMenu';
 import SignDropdown from '../components/NavBar/SignDropDown';
 
-const Test: React.FC<{ theme: iTheme }> = ({ theme }) => {
+const Test: React.FC<{ theme: any }> = ({ theme }) => {
    const paragraphs = [
       {
          id: 1,

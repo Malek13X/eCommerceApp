@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch } from 'react-icons/fa';
+
 
 const SearchBar: React.FC<{ theme: any; size: string }> = ({ theme, size }) => {
    return (

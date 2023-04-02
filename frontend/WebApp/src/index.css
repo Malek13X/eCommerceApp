@@ -34,3 +34,14 @@ code {
 
 
 }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  /* Hide arrows on Chrome, Safari, and Opera */
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  /* Hide arrows on Firefox */
+  -moz-appearance: textfield;
+}

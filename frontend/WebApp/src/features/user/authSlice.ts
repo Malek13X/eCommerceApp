@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
-import { parse } from 'dotenv';
 
 const user = localStorage.getItem('user') || 'object';
 const parsedUser = user !== 'object' ? JSON.parse(user) : null;
@@ -55,6 +54,30 @@ export const signOut = createAsyncThunk('auth/signOut', async () => {
    await authService.signOut();
 });
 
+// Update user profile
+export const updateUserProfile = createAsyncThunk(
+   'auth/updateUserProfile',
+   async (user: any, thunkAPI) => {
+      try {
+         const token = localStorage.getItem('token');
+
+         if (!token) {
+            throw new Error('Athentication token not found');
+         }
+
+         return await authService.updateUserProfile(user, token);
+      } catch (error: any) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString();
+         return thunkAPI.rejectWithValue(message);
+      }
+   }
+);
+
 export const authSlice = createSlice({
    name: 'auth',
    initialState: initialState,
@@ -103,6 +126,19 @@ export const authSlice = createSlice({
             state.isSuccess = false;
             state.isLoading = false;
             state.message = '';
+         })
+         .addCase(updateUserProfile.pending, (state) => {
+            state.isLoading = true;
+         })
+         .addCase(updateUserProfile.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.user = action.payload;
+         })
+         .addCase(updateUserProfile.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload as string;
          });
    }
 });

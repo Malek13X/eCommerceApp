@@ -1,11 +1,12 @@
-import React from "react";
+import React from 'react';
+import Phone from '../components/Functional/Phone';
 
-function App() {
-  return (
-    <div className="flex flex-wrap justify-center">
-      <div className="bg-red-300 w-20 h-20"></div>
-    </div>
-  );
-}
+const Home: React.FC<{ theme: any }> = ({ theme }) => {
+   return (
+      <div className="flex flex-wrap justify-center">
+         <div className={`${theme.textColor} `}></div>
+      </div>
+   );
+};
 
-export default App;
+export default Home;

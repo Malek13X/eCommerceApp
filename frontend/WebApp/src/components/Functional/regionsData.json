@@ -1,0 +1,33 @@
+[
+   {
+      "name": "United States",
+      "dial_code": "+1",
+      "emoji": "🇺🇸",
+      "code": "US"
+   },
+   {
+      "name": "United Kingdom",
+      "dial_code": "+44",
+      "emoji": "🇬🇧",
+      "code": "GB"
+   },
+
+   {
+      "name": "France",
+      "dial_code": "+33",
+      "emoji": "🇫🇷",
+      "code": "FR"
+   },
+   {
+      "name": "United Arab Emirates",
+      "dial_code": "+971",
+      "emoji": "🇦🇪",
+      "code": "AE"
+   },
+   {
+      "name": "Lebanon",
+      "dial_code": "+961",
+      "emoji": "🇱🇧",
+      "code": "LB"
+   }
+]

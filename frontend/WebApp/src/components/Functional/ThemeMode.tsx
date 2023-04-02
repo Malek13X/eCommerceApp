@@ -5,7 +5,12 @@ import { AppDispatch } from '../../app/store';
 
 import { switchTheme } from '../../features/user/UISlice';
 
-const ThemeMode: React.FC<{ theme: any; size: string}> = ({ theme, size }) => {
+type props = {
+   size: string;
+   style: string;
+}
+
+const ThemeMode: React.FC<props> = ({ size, style }) => {
    const dispatch = useDispatch<AppDispatch>();
    const { themeMode } = useSelector((state: any) => state.UI);
 
@@ -14,7 +19,7 @@ const ThemeMode: React.FC<{ theme: any; size: string}> = ({ theme, size }) => {
       <div
          id="theme-mode"
          className={`${size === 'big' ? 'hidden md:block  pl-4 ' : 'md:hidden block  ml-5'}
-         h-fit w-fit items-center justify-center  hover:opacity-80  `}
+         h-fit w-fit items-center justify-center  hover:opacity-80 ${style} `}
       >
          {themeMode === 'dark' ? (
             <BsSun
