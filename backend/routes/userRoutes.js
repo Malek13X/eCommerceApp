@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+
+import {
    loginUser,
    registerUser,
    getUserProfile,
@@ -9,12 +9,11 @@ const {
    deleteUser,
    getUserById,
    updateUser,
-} = require("../controllers/userController");
-const {
-   protect,
-   admin,
-   authLimiter,
-} = require("../middlewares/authMiddleware");
+} from "../controllers/userController.js";
+
+import { protect, admin, authLimiter } from "../middlewares/authMiddleware.js";
+
+const router = express.Router();
 
 // Public Routes
 router.post("/login", authLimiter, loginUser);
@@ -34,4 +33,4 @@ router.delete("/:id", deleteUser);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
 
-module.exports = router;
+export default router;

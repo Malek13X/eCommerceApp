@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel");
-const rateLimit = require("express-rate-limit");
+import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
+import User from "../models/userModel.js";
+import rateLimit from "express-rate-limit";
 
 const protect = asyncHandler(async (req, res, next) => {
    let token;
@@ -51,4 +51,4 @@ const authLimiter = rateLimit({
    message: "Too many login attempts. Please try again later.",
 });
 
-module.exports = { protect, admin, authLimiter };
+export { protect, admin, authLimiter };

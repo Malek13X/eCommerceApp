@@ -1,15 +1,22 @@
-require("dotenv").config();
-require("colors");
-const path = require("path");
-const cors = require("cors");
-const express = require("express");
-const session = require("express-session");
-const connectDB = require("./config/db");
-const { errorHandler } = require("./middlewares/errorMiddleware");
+import { config } from "dotenv";
+import "colors";
+import path from "path";
+import cors from "cors";
+import express from "express";
+import session from "express-session";
+import connectDB from "./config/db.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
+import userRoutes from "./routes/userRoutes.js";
+import itemRoutes from "./routes/itemRoutes.js";
+import multer from "multer";
+
+const upload = multer({ dest: "uploads/" }); // specify the directory to save uploaded files
 const port = process.env.PORT || 5000;
 
+config();
 connectDB();
 const app = express();
+
 app.use(
    cors({
       origin: "http://localhost:3000",
@@ -28,8 +35,8 @@ app.use(
    })
 );
 
-app.use("/api/users", require("./routes/userRoutes"));
-app.use("/api/items/", require("./routes/itemRoutes"));
+app.use("/api/users", userRoutes);
+app.use("/api/items/",upload.single('image'), itemRoutes);
 
 // //  Serve frontend
 // if (process.env.NODE_ENV === 'production') {

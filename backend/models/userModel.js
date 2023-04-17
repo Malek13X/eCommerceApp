@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const validator = require("validator");
-const passwordValidator = require("password-validator");
-const libphonenumber = require("google-libphonenumber");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import validator from "validator";
+import passwordValidator from "password-validator";
+import libphonenumber from "google-libphonenumber";
 
 const nameValidator = new RegExp(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/);
 function formatPhoneNumber(number) {
@@ -146,4 +146,4 @@ userSchema.pre("save", async function (next) {
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+export default User;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const itemSchema = new Schema(
@@ -21,11 +21,13 @@ const itemSchema = new Schema(
          type: Number,
          required: true,
       },
-      image: { type: String },
+      imageUrl: { type: String },
+      imageUUID: { type: String },
    },
    {
       timestamps: true,
    }
 );
+const Item = mongoose.model("item", itemSchema);
 
-module.exports = Item = mongoose.model("item", itemSchema);
+export default Item;

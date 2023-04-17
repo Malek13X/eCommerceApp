@@ -5,40 +5,31 @@ import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/NavBar/SearchBar';
 import UserMenu from '../components/Functional/UserMenu';
 import SignDropdown from '../components/NavBar/SignDropDown';
+import axios from 'axios';
+
+interface iItem {
+   _id: string;
+   title: string;
+   description: string;
+   categories: string[];
+   price: number;
+   imageUUID: string;
+   imageUrl: string;
+}
 
 const Test: React.FC<{ theme: any }> = ({ theme }) => {
-   const paragraphs = [
-      {
-         id: 1,
-         title: 'Nvidia GTX 1080',
-         price: '145.99$',
-         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-      },
-      {
-         id: 2,
-         title: 'Nvidia GTX 1070',
-         price: '123.99$',
-         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-      },
-      {
-         id: 3,
-         title: 'Nvidia GTX 1060',
-         price: '101.45$',
-         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-      },
-      {
-         id: 4,
-         title: 'Nvidia GTX 1050',
-         price: '92.99$',
-         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-      },
-      {
-         id: 5,
-         title: 'Nvidia GTX 1080 Ti',
-         price: '215.99$',
-         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+   const [items, setItems] = useState<iItem[]>([]);
+
+   const fetchItems = async () => {
+      const response = await axios.get('/api/items/');
+      const data = await response.data;
+
+      if (data) {
+         setItems(data);
       }
-   ];
+   };
+   fetchItems();
+   
 
    return (
       <div className={`pt-6  ${theme.textColor} `}>
@@ -51,8 +42,9 @@ const Test: React.FC<{ theme: any }> = ({ theme }) => {
                      className={`text-md rounded-sm px-12 py-12 text-left md:px-20 md:py-20 md:text-3xl lg:text-5xl  ${theme.bgColor}`}
                   >
                      Upto 50% Discount On All Of These Items
+                     
                   </div>
-                  
+
                   <div className="flex  items-end">
                      <div
                         className={`${theme.borderColor} h-10 w-10 rounded-full bg-gray-500  text-gray-500 hover:h-32 hover:w-32  md:h-20 md:w-20`}
@@ -68,11 +60,8 @@ const Test: React.FC<{ theme: any }> = ({ theme }) => {
                </div>
 
                <div className="flex  flex-wrap justify-center text-xs ">
-                  {paragraphs.map((item) => (
-                     <div
-                        key={item.id}
-                        className={`m-2 rounded-md p-2 text-center `}
-                     >
+                  {items.map((item) => (
+                     <div className={`m-2 rounded-md p-2 text-center `}>
                         <ProductCard item={item} />
                      </div>
                   ))}

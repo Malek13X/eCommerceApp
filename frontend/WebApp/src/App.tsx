@@ -10,6 +10,7 @@ import Test from './pages/Test';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Profile from './pages/Profile';
+import AdminDashboard from './pages/AdminDashboard';
 
 import { useEffect, useState } from 'react';
 import Nav from './components/NavBar//Nav';
@@ -38,6 +39,7 @@ const App: React.FC = () => {
                <Nav />
                <Routes>
                   <Route path="/" element={<Home theme={theme} />} />
+                  <Route path="/dashboard" element={<AdminDashboard theme={theme} />} />
                   <Route path="/signup" element={<SignUp theme={theme} />} />
                   <Route path="/signin" element={<SignIn theme={theme} />} />
                   <Route path="/profile" element={<Profile theme={theme} />} />

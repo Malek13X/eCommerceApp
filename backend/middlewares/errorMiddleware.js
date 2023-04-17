@@ -6,7 +6,7 @@ const errorHandler = (err, req, res, next) => {
    let statusCode = 500;
    let message = "Internal Server Error";
 
-   // Handle Mongoose validation errors 
+   // Handle Mongoose validation errors
    if (err.name === "ValidationError") {
       statusCode = 400;
       message = Object.values(err.errors).map((error) => error.message);
@@ -45,8 +45,14 @@ const errorHandler = (err, req, res, next) => {
    // Handle rate limiting errors
    if (err.status === 429) {
       statusCode = 429;
-      
+
       message = "Too many attempts. Please try again later.";
+   }
+
+   // Handle adding item required field
+   if (err.message === "All fields are required") {
+      statusCode = 400;
+      message = "All fields are required";
    }
 
    // Check if the error message exists
@@ -64,5 +70,4 @@ const errorHandler = (err, req, res, next) => {
    }
 };
 
-module.exports = { errorHandler };
- 
+export { errorHandler };

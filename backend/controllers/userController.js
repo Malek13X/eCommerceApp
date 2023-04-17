@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel");
-const generateToken = require("../utils/generateToken");
-const bcrypt = require("bcryptjs");
+import asyncHandler from "express-async-handler";
+import User from "../models/userModel.js";
+import generateToken from "../utils/generateToken.js";
+import bcrypt from "bcryptjs";
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -131,7 +131,6 @@ const deleteUser = asyncHandler(async (req, res) => {
    if (user) {
       await user.remove();
       res.json({ message: "User removed" });
-      
    } else {
       res.status(404);
       throw new Error("User not found");
@@ -176,7 +175,7 @@ const updateUser = asyncHandler(async (req, res) => {
    }
 });
 
-module.exports = {
+export {
    loginUser,
    registerUser,
    getUserProfile,

@@ -1,6 +1,7 @@
 {
    "name": "ecommerce-app",
    "version": "1.0.0",
+   "type": "module",
    "description": "",
    "main": "index.js",
    "scripts": {
@@ -9,7 +10,9 @@
       "client": "npm start --prefix frontend"
    },
    "dependencies": {
-      "@google-cloud/storage": "^6.9.4",
+      "@uploadcare/rest-client": "^6.4.1",
+      "@uploadcare/signed-uploads": "^6.4.1",
+      "@uploadcare/upload-client": "^6.4.1",
       "bcryptjs": "^2.4.3",
       "colors": "^1.4.0",
       "cors": "^2.8.5",

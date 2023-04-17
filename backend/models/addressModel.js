@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
-const addressValidator = require('address-validator');
-
-
+import mongoose from 'mongoose';
+import addressValidator from 'address-validator';
 
 const addressSchema = new mongoose.Schema({
   user: {
@@ -42,5 +40,5 @@ const addressSchema = new mongoose.Schema({
   },
   
 });
-
-module.exports = mongoose.model('Address', addressSchema);
+const Address = mongoose.model('Address', addressSchema);
+export default Address 
