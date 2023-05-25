@@ -18,7 +18,7 @@ const loginUser = asyncHandler(async (req, res) => {
          email: user.email,
          phone: user.phone,
          role: user.role,
-         token: generateToken(user._id),
+         token: generateToken(user._id, user.role),
       });
    } else {
       res.status(401);
@@ -53,7 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
          email: user.email,
          phone: user.phone,
          role: user.role,
-         token: generateToken(user._id),
+         token: generateToken(user._id, user.role),
       });
    } else {
       res.status(400);
@@ -74,7 +74,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
          email: user.email,
          phone: user.phone,
          role: user.role,
-         token: generateToken(user._id),
+         token: generateToken(user._id, user.role),
       });
    } else {
       res.status(404);
@@ -106,7 +106,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
          email: updatedUser.email,
          phone: updatedUser.phone,
          role: updatedUser.role,
-         token: generateToken(updatedUser._id),
+         token: generateToken(updatedUser._id, updatedUser.role),
       });
    } else {
       res.status(404);

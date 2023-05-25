@@ -10,7 +10,7 @@ import { MdClose } from 'react-icons/md';
 import { BiMenu, BiUserCircle } from 'react-icons/bi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { BsMoon, BsSun } from 'react-icons/bs';
-import { switchTheme } from '../../features/user/UISlice';
+import { switchTheme } from '../../features/UISlice';
 import { darkTheme, lightTheme } from '../../components/data';
 import Categories from './Categories';
 import { signOut } from '../../features/user/authSlice';
@@ -81,7 +81,7 @@ const Nav = () => {
             </Link>
 
             <div className="hidden w-9/12 items-center md:flex">
-               <SearchBar theme={theme} size={'big'} />
+               <SearchBar theme={theme} barSize={'big'} />
                <div className="pl-3">
                   <ThemeMode size="big" style="md:pr-6   " />
                </div>
@@ -131,7 +131,7 @@ const Nav = () => {
                className={`menu ${theme.mainBg} border-b-[1px] dark:bg-opacity-70 ${theme.borderColor} h-fill py-3`}
             >
                <div className="mr-3 ml-3  flex items-center">
-                  <SearchBar theme={theme} size={'small'} />
+                  <SearchBar theme={theme} barSize={'small'} />
 
                   <ThemeMode size="small" style="" />
                </div>

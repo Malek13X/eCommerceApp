@@ -9,6 +9,7 @@ import { errorHandler } from "./middlewares/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import itemRoutes from "./routes/itemRoutes.js";
 import multer from "multer";
+import bodyParser from "body-parser"
 
 const upload = multer({ dest: "uploads/" }); // specify the directory to save uploaded files
 const port = process.env.PORT || 5000;
@@ -22,6 +23,10 @@ app.use(
       origin: "http://localhost:3000",
    })
 );
+
+app.use(bodyParser.json({ limit: "10mb" })); // Adjust the limit as per your requirements
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

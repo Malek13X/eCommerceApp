@@ -7,15 +7,15 @@ import ThemeMode from './ThemeMode';
 
 const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
    const dispatch = useDispatch<AppDispatch>();
-   const navigate = useNavigate()
+   const navigate = useNavigate();
    const onSignOutClick = () => {
       dispatch(signOut());
-      navigate('/')
+      navigate('/');
       // ? window.location.reload(false);
    };
 
    return (
-      <div className="absolute right-4 top-16 z-[100] " >
+      <div className="absolute right-4 top-16 z-[100] ">
          <div
             id="dropdownAvatar"
             className={`w-48  divide-y divide-gray-100 rounded-sm  dark:divide-opacity-60 ${theme.borderColor} ${theme.mainBg} ${theme.textColor} shadow-xl dark:divide-gray-600`}
@@ -23,7 +23,6 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
             <div className=" text-md px-4 py-3 ">
                <div className="flex justify-between ">
                   <div className="font-bold capitalize">{user.name}</div>
-                
                </div>
                <div className="truncate pl-[4px]  text-xs font-medium">
                   {user.email}
@@ -35,7 +34,7 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
             >
                <li>
                   <Link
-                     to='/profile'
+                     to="/profile"
                      className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
                   >
                      Profile
@@ -57,6 +56,18 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
                      History
                   </a>
                </li>
+               {user.role === 'admin' ? (
+                  <li>
+                     <Link
+                        to="/dashboard"
+                        className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
+                     >
+                        Dashboard
+                     </Link>
+                  </li>
+               ) : (
+                  <></>
+               )}
             </ul>
             <div className="py-2">
                <a

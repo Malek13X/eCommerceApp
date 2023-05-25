@@ -6,30 +6,20 @@ import SearchBar from '../components/NavBar/SearchBar';
 import UserMenu from '../components/Functional/UserMenu';
 import SignDropdown from '../components/NavBar/SignDropDown';
 import axios from 'axios';
-
-interface iItem {
-   _id: string;
-   title: string;
-   description: string;
-   categories: string[];
-   price: number;
-   imageUUID: string;
-   imageUrl: string;
-}
+import { useGetItemsQuery } from '../features/items/itemApi';
+import { Item } from '../services/types';
 
 const Test: React.FC<{ theme: any }> = ({ theme }) => {
-   const [items, setItems] = useState<iItem[]>([]);
+   const [items, setItems] = useState<Item[]>();
 
-   const fetchItems = async () => {
-      const response = await axios.get('/api/items/');
-      const data = await response.data;
-
-      if (data) {
-         setItems(data);
+   const { data: itemsData, isLoading, error } = useGetItemsQuery('');
+   useEffect(() => {
+      if (itemsData) {
+         setItems(itemsData);
       }
-   };
-   fetchItems();
-   
+
+      return () => {};
+   }, [itemsData]);
 
    return (
       <div className={`pt-6  ${theme.textColor} `}>
@@ -42,7 +32,6 @@ const Test: React.FC<{ theme: any }> = ({ theme }) => {
                      className={`text-md rounded-sm px-12 py-12 text-left md:px-20 md:py-20 md:text-3xl lg:text-5xl  ${theme.bgColor}`}
                   >
                      Upto 50% Discount On All Of These Items
-                     
                   </div>
 
                   <div className="flex  items-end">
@@ -60,11 +49,16 @@ const Test: React.FC<{ theme: any }> = ({ theme }) => {
                </div>
 
                <div className="flex  flex-wrap justify-center text-xs ">
-                  {items.map((item) => (
-                     <div className={`m-2 rounded-md p-2 text-center `}>
-                        <ProductCard item={item} />
-                     </div>
-                  ))}
+                  {items
+                     ?.filter((i) => i.quantity > 0)
+                     .map((item: Item) => (
+                        <div
+                           key={item._id}
+                           className={`m-2 rounded-md p-2 text-center `}
+                        >
+                           <ProductCard item={item} />
+                        </div>
+                     ))}
                </div>
             </ul>
          </div>

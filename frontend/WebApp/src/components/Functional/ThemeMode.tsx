@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BsMoon, BsSun } from 'react-icons/bs';
 import { AppDispatch } from '../../app/store';
 
-import { switchTheme } from '../../features/user/UISlice';
+import { switchTheme } from '../../features/UISlice';
 
 type props = {
    size: string;
    style: string;
-}
+};
 
 const ThemeMode: React.FC<props> = ({ size, style }) => {
    const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +18,9 @@ const ThemeMode: React.FC<props> = ({ size, style }) => {
    return (
       <div
          id="theme-mode"
-         className={`${size === 'big' ? 'hidden md:block  pl-4 ' : 'md:hidden block  ml-5'}
+         className={`${
+            size === 'big' ? 'hidden pl-4  md:block ' : 'ml-5 block  md:hidden'
+         }
          h-fit w-fit items-center justify-center  hover:opacity-80 ${style} `}
       >
          {themeMode === 'dark' ? (

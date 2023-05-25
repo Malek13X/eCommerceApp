@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const itemSchema = new Schema(
+const ItemSchema = new Schema(
    {
       title: {
          type: String,
@@ -21,6 +21,7 @@ const itemSchema = new Schema(
          type: Number,
          required: true,
       },
+      quantity: { type: Number, required: true },
       imageUrl: { type: String },
       imageUUID: { type: String },
    },
@@ -28,6 +29,7 @@ const itemSchema = new Schema(
       timestamps: true,
    }
 );
-const Item = mongoose.model("item", itemSchema);
+
+const Item = mongoose.model("item", ItemSchema);
 
 export default Item;
