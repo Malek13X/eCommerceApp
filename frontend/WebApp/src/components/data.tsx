@@ -1,31 +1,3 @@
-import { TbLayoutDashboard } from 'react-icons/tb';
-import { HiTemplate } from 'react-icons/hi';
-import { GiSellCard } from 'react-icons/gi';
-import { AiFillCrown } from 'react-icons/ai';
-
-export const navLinks = [
-   {
-      title: 'Dashboard',
-      link: '/',
-      icon: <TbLayoutDashboard />
-   },
-   {
-      title: 'Nav 1',
-      link: '/signin',
-      icon: <HiTemplate />
-   },
-   {
-      title: 'Nav 2',
-      link: '/signup',
-      icon: <AiFillCrown />
-   },
-   {
-      title: 'Test',
-      link: '/test',
-      icon: <GiSellCard />
-   }
-];
-
 export const lightTheme = {
    primaryColor: '[#eeeeee]',
    secondaryColor: 'slate-700',
@@ -51,7 +23,7 @@ export const darkTheme = {
    hoverFontBold: 'hover:dark:font-bold'
 };
 
-export interface iTheme {
+export interface ITheme {
    primaryColor: string;
    secondaryColor: string;
    borderColor: string;

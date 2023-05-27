@@ -9,12 +9,13 @@ import asyncHandler from "express-async-handler";
 import Item from "../models/itemModel.js";
 import fs from "fs";
 import jwt from "jsonwebtoken";
+import sharp from "sharp";
 
 const getItems = asyncHandler(async (req, res) => {
    try {
       const { search } = req.query;
       let token;
-      let isAdmin;
+      let isAdmin = false;
       if (
          req.headers.authorization &&
          req.headers.authorization.startsWith("Bearer")
@@ -27,9 +28,10 @@ const getItems = asyncHandler(async (req, res) => {
 
       let query = Item.find().sort({ title: 1 });
 
-      if (!isAdmin) {
-         query = query.where("isHidden").equals(false);
-      }
+      // if (!isAdmin) {
+      //    query = query.where("isHidden").equals(false);
+      // }
+
       if (search) {
          query = query.regex("title", new RegExp(search, "i"));
       }
@@ -55,15 +57,29 @@ const getItems = asyncHandler(async (req, res) => {
 const addItem = asyncHandler(async (req, res) => {
    let savedItem;
    try {
-      const { title, description, categories, price, quantity, isHidden } =
-         req.body;
-      const fileData = req.file;
-      const buffer = fileData ? fs.readFileSync(fileData.path) : "";
+      const { title, description, categories, price, quantity } = req.body;
+      const image = req.file;
 
-      console.log(`fileData:`, fileData);
+      // const buffer = fileData ? fs.readFileSync(fileData.path) : "";
+      console.log("Body", req.body);
 
+      // Convert image to JPEG
+      console.log(image.mimetype.split("/")[1]);
 
-      // Check if all required fields are present
+      let buffer = null;
+      if (image) {
+         const imageFormat = image.mimetype.split("/")[1]; // Extract the image format from the MIME type
+         if (imageFormat !== "jpeg") {
+            buffer = await sharp(image.path)
+               .flatten({ background: { r: 223, g: 232, b: 232 } })
+               .jpeg()
+               .toBuffer();
+         } else {
+            buffer = await sharp(image.path).toBuffer();
+         }
+      }
+
+      //  Check if all required fields are present
       if (
          !title ||
          !description ||
@@ -76,14 +92,15 @@ const addItem = asyncHandler(async (req, res) => {
          throw new Error("All fields are required");
       }
 
+      const parsedCategories =
+         categories === "string" ? JSON.parse(categories) : categories;
       // Create new item in the database
       const newItem = new Item({
          title,
          description,
-         categories,
+         categories: parsedCategories,
          price,
          quantity,
-         isHidden,
          imageUrl: "Unknown",
          imageUUID: "Unknown",
       });
@@ -91,7 +108,7 @@ const addItem = asyncHandler(async (req, res) => {
 
       const uploadcareResult = await uploadDirect(buffer, {
          publicKey: process.env.UPLOADCARE_PUBLIC_KEY,
-         fileName: fileData ? fileData.originalname : "Unknown",
+         fileName: image ? image.originalname : "Unknown",
          metadata: {
             categories,
             title,
@@ -113,7 +130,7 @@ const addItem = asyncHandler(async (req, res) => {
       await Item.findByIdAndDelete(savedItem?._id);
       console.error(err);
       res.status(500);
-      throw new Error("Something went wrong");
+      throw new Error("Failed to add item, Something went wrong");
    }
 });
 
@@ -125,7 +142,7 @@ const updateItem = asyncHandler(async (req, res) => {
          categories,
          price,
          quantity,
-         isHidden,
+
          imageUrl,
          imageUUID,
       } = req.body;
@@ -136,7 +153,7 @@ const updateItem = asyncHandler(async (req, res) => {
          item.description = description || item.description;
          item.price = price || item.price;
          item.quantity = quantity || item.quantity;
-         item.isHidden = isHidden || Item.isHidden;
+
          // item.imageUrl = imageUrl || Item.imageUrl;
          // item.imageUUID = imageUUID || Item.imageUUID;
       } else {

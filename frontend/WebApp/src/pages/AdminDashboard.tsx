@@ -4,7 +4,7 @@ import {
    useDeleteItemMutation,
    useEditItemMutation
 } from '../features/items/itemApi';
-import { NewItem, Item } from '../services/types';
+import { INewItem, Item } from '../services/types';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { ImSpinner, ImSpinner2 } from 'react-icons/im';
 
@@ -79,7 +79,7 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
             <div className="flex ">
                <button
                   className="mx-2 h-8 w-fit rounded-sm bg-green-500 py-2  px-2 text-xs  font-bold text-white shadow-lg hover:bg-green-700 md:h-10 md:text-base"
-                  onClick={() => setToggleAddItemForm(!toggleAddItemForm)}
+                  onClick={() => setToggleAddItemForm(true)}
                >
                   Add Item
                </button>
@@ -159,10 +159,10 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                           title={item.description}
                                        >
                                           <img
-                                             className="mr-5 h-14 w-14"
+                                             className="mr-5 w-20 rounded"
                                              src={
                                                 item.imageUrl +
-                                                '-/preview/100x100/'
+                                                '-/preview/200x200/'
                                              }
                                           />
                                           {item.title}

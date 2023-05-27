@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import { useAddItemMutation } from '../../features/items/itemApi';
-import { NewItem } from '../../services/types';
+import { INewItem } from '../../services/types';
 import { IoMdClose } from 'react-icons/io';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { AiOutlineLoading } from 'react-icons/ai';
 
 type props = {
    theme: any;
@@ -15,7 +17,7 @@ const ItemForm: React.FC<props> = ({
    setToggleAddItemForm,
    toggleAddItemForm
 }) => {
-   const [newItem, setNewItem] = useState<NewItem>({
+   const [newItem, setNewItem] = useState<INewItem>({
       title: '',
       description: '',
       categories: [],
@@ -47,12 +49,14 @@ const ItemForm: React.FC<props> = ({
       const { name, value } = event.target;
       setNewItem((prevItem) => ({
          ...prevItem,
-         [name]: [value]
+         [name]: value
       }));
    };
 
    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files && event.target.files[0];
+      console.log(file);
+
       setNewItem((prevItem) => ({
          ...prevItem,
          image: file || null
@@ -61,6 +65,7 @@ const ItemForm: React.FC<props> = ({
 
    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
       addItem(newItem);
    };
 
@@ -74,30 +79,47 @@ const ItemForm: React.FC<props> = ({
             quantity: 0,
             image: null
          });
+         setToggleAddItemForm(false);
       }
       if (error !== undefined) {
          console.log('Error:', error);
       }
+      console.log(newItem);
    }, [error, isSuccess, newItem]);
 
    if (isLoading) {
-      <div>Loading...</div>;
+      return (
+         <div className="fixed top-0  left-0 right-0 bottom-0 flex  items-center justify-center bg-gray-900 bg-opacity-50 ">
+            <div className="flex h-40 flex-col  items-center justify-center border border-slate-300 bg-slate-700 px-32  shadow-xl  ">
+               <div className="mx-2 my-5 flex text-xl font-bold">
+                  <AiOutlineLoading className="animate-spin " size={40} />
+               </div>
+               <button
+                  type="button"
+                  className="focus:shadow-outline h-10 rounded bg-slate-500 py-2 px-4 font-bold text-white hover:bg-slate-600 focus:outline-none"
+               >
+                  Cancel
+               </button>
+            </div>
+         </div>
+      );
    }
    if (!toggleAddItemForm) {
       return <></>;
    }
    return (
       <div className="fixed top-0  left-0 right-0 bottom-0 flex  items-center justify-center bg-gray-900 bg-opacity-50 md:scale-100">
-         <div className="parent relative mx-3 flex max-w-7xl  border border-slate-300 bg-slate-700 p-2  shadow-xl  md:flex-row md:flex-nowrap ">
+         <div className="parent relative mx-3 flex  border border-slate-300 bg-slate-700 p-2  shadow-xl  ">
             <form
                onSubmit={handleSubmit}
-               className={`${theme.mainBg} ${theme.textColor} p-10`}
+               className={`${theme.mainBg} ${theme.textColor} max-w-prose p-10`}
             >
                <div className=" mb-4 items-center">
                   <label htmlFor="title" className="flex-1 ">
                      Title
                   </label>
                   <input
+                     required
                      type="text"
                      id="title"
                      name="title"
@@ -112,6 +134,7 @@ const ItemForm: React.FC<props> = ({
                      Description
                   </label>
                   <input
+                     required
                      id="description"
                      name="description"
                      type="text"
@@ -121,21 +144,21 @@ const ItemForm: React.FC<props> = ({
                   />
                </div>
 
-               <div className="mb-4">
+               <div className="mb-4 border p-3">
                   <label htmlFor="categories" className="">
                      Categories
                   </label>
                   <div>
-                     <div className="flex flex-wrap items-center">
+                     <div className="text-md  mb-3 flex w-full flex-wrap ">
                         {newItem.categories.map((category) => (
                            <span
                               key={category}
-                              className="mr-2 mb-2 rounded-lg border-2 border-blue-500 px-2"
+                              className="mr-2 mb-2 whitespace-nowrap rounded-lg border-2 border-blue-500 px-2"
                            >
                               {category}
                               <button
                                  type="button"
-                                 className="ml-2 text-red-600"
+                                 className="ml-2  text-red-600"
                                  onClick={() => handleCategoryDelete(category)}
                               >
                                  &times;
@@ -144,9 +167,12 @@ const ItemForm: React.FC<props> = ({
                         ))}
                      </div>
                      <div>
-                        <div className='flex'>
+                        <div className="flex">
                            <input
-                              className="rounded-lg text-slate-700 w-full"
+                              required={
+                                 newItem.categories.length === 0 ? true : false
+                              }
+                              className="w-full rounded-lg text-slate-700"
                               name="categories"
                               type="text"
                               value={newCategory}
@@ -169,6 +195,7 @@ const ItemForm: React.FC<props> = ({
                      Quantity
                   </label>
                   <input
+                     required
                      type="number"
                      name="quantity"
                      id="quantity"
@@ -187,6 +214,7 @@ const ItemForm: React.FC<props> = ({
                         $
                      </span>
                      <input
+                        required
                         type="number"
                         name="price"
                         id="price"
@@ -207,6 +235,7 @@ const ItemForm: React.FC<props> = ({
                         Image
                      </label>
                      <input
+                        required
                         type="file"
                         name="image"
                         id="image"
@@ -216,12 +245,21 @@ const ItemForm: React.FC<props> = ({
                      />
                   </div>
                ) : (
-                  <>
+                  <label htmlFor="image" className=" relative h-60 bg-gray-100">
                      <img
-                        className="max-w-50 h-60 bg-gray-100 "
+                        className="my-2 h-60 object-cover"
                         src={URL.createObjectURL(newItem.image)}
+                        alt="Selected Image"
                      />
-                  </>
+                     <input
+                        type="file"
+                        name="image"
+                        id="image"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                     />
+                  </label>
                )}
 
                <button

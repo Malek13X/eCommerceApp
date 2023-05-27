@@ -26,25 +26,29 @@ const Test: React.FC<{ theme: any }> = ({ theme }) => {
          <div className=" h-full  p-10">
             <ul>
                <div
-                  className={`flex border-2 ${theme.borderColor} m-2 mb-16 items-center rounded-md p-5  py-10  text-center`}
+                  className={`md:pt-auto flex flex-col-reverse flex-wrap justify-between border-2 pt-10 md:flex-row md:flex-nowrap md:px-12 lg:px-20 xl:px-40 ${theme.borderColor} m-2 mb-16 items-center rounded-md px-5  py-10  text-center`}
                >
                   <div
-                     className={`text-md rounded-sm px-12 py-12 text-left md:px-20 md:py-20 md:text-3xl lg:text-5xl  ${theme.bgColor}`}
+                     className={` py-12 text-left text-2xl md:py-10 md:pr-10 md:text-3xl lg:text-5xl  `}
                   >
-                     Upto 50% Discount On All Of These Items
+                     50% Discount On{' '}
+                     <span className="font-bold text-yellow-400">
+                        RTX 1080 Ti
+                     </span>
                   </div>
 
-                  <div className="flex  items-end">
-                     <div
-                        className={`${theme.borderColor} h-10 w-10 rounded-full bg-gray-500  text-gray-500 hover:h-32 hover:w-32  md:h-20 md:w-20`}
-                     >
-                        .
-                     </div>
-                     <div
-                        className={` ${theme.borderColor} h-16 w-16 bg-gray-600 text-gray-600 hover:animate-bounce md:h-32 md:w-32 `}
-                     >
-                        .
-                     </div>
+                  <div
+                     className={`  ${theme.borderColor}  rounded-full  text-gray-500 `}
+                  >
+                     <img
+                        className="w-64  md:w-96 "
+                        src={
+                           items
+                              ? items[1].imageUrl +
+                                '-/preview/800x800/-/progressive/yes/-/quality/lightest/'
+                              : ''
+                        }
+                     />
                   </div>
                </div>
 

@@ -1,21 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { NewItem, Item } from '../../services/types';
+import { INewItem, Item } from '../../services/types';
 import { RootState } from '../../app/store';
-
 export const itemsApi = createApi({
    reducerPath: 'items',
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
       prepareHeaders: (headers, { getState }) => {
          const state = getState() as RootState;
-
          const token = state.auth.user.token;
 
          if (token) {
             headers.set('Authorization', `Bearer ${token}`);
          }
 
-         headers.set('Content-Type', 'application/json');
+         // Remove the 'Content-Type' header as it will be set automatically by 'FormData'
          return headers;
       }
    }),
@@ -24,28 +22,28 @@ export const itemsApi = createApi({
       getItems: builder.query<Item[], string>({
          query: (search) => {
             return {
-               url: `/items`,
+               url: '/items',
                params: { search }
             };
          }
       }),
-      addItem: builder.mutation<NewItem, NewItem>({
-         query: (item: NewItem) => {
+      addItem: builder.mutation<void, INewItem>({
+         query: (item) => {
             const formData = new FormData();
+            if (item.image) {
+               formData.append('image', item.image);
+            }
+
             formData.append('title', item.title);
             formData.append('description', item.description);
             formData.append('categories', JSON.stringify(item.categories));
-            formData.append('price', item.price.toString());
-            formData.append('quantity', item.quantity.toString());
-            item.image ? formData.append('image', item.image) : null;
+            formData.append('price', String(item.price));
+            formData.append('quantity', String(item.quantity));
 
             return {
                url: '/items',
                method: 'POST',
-               body: formData,
-               headers: {
-                  'Content-Type': 'multipart/form-data'
-               }
+               body: formData
             };
          }
       }),
@@ -59,16 +57,12 @@ export const itemsApi = createApi({
                categories: item.categories,
                price: item.price,
                quantity: item.quantity
-
-               // imageUrl: item.imageUrl,
-               // imageUUDI: item.imageUUID
             }),
             headers: {
                'Content-Type': 'application/json'
             }
          })
       }),
-
       deleteItem: builder.mutation<Item, string>({
          query: (itemId) => ({
             url: `/items/${itemId}`,

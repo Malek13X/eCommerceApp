@@ -1,6 +1,6 @@
 const errorHandler = (err, req, res, next) => {
    // Log the error
-   console.error(err.stack);
+   console.error("\x1b[31m%s\x1b[0m", err.stack);
 
    // Set default status code and error message
    let statusCode = 500;
@@ -57,7 +57,7 @@ const errorHandler = (err, req, res, next) => {
 
    // Check if the error message exists
    if (err.message) {
-      message = err.message;
+      message = err.message.red;
    }
 
    // Send the error response
@@ -66,7 +66,7 @@ const errorHandler = (err, req, res, next) => {
       res.status(statusCode).json({ message });
    } else {
       // If in development, send the full error object
-      res.status(statusCode).json({ error: err, message });
+      res.status(statusCode).json({ error: err.red, message });
    }
 };
 

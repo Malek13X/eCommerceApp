@@ -6,7 +6,7 @@ const ProductCard: React.FC<{ item: Item }> = ({ item }) => {
    console.log(item);
    return (
       <div className="parent relative  flex max-w-sm flex-wrap overflow-hidden rounded-sm bg-gray-400 shadow-lg">
-         <div id="image" className="rounded-t-sm bg-gray-600 ">
+         <div id="image" className=" min-w-full rounded-t-sm bg-gray-600 ">
             {item.quantity === 0 && (
                <div className="child absolute z-20 h-full w-full bg-gray-600 bg-opacity-80 pt-[25%] text-center text-4xl ">
                   <div className="whitespace-nowrap  font-extrabold">
@@ -16,7 +16,10 @@ const ProductCard: React.FC<{ item: Item }> = ({ item }) => {
             )}
             <img
                className="  h-full w-full bg-gradient-to-tr from-slate-600 to-slate-400 "
-               src={item.imageUrl + '-/preview/400x400/'}
+               src={
+                  item.imageUrl +
+                  '-/preview/800x800/-/quality/lightest/-/progressive/yes/'
+               }
                alt="Image"
             />
          </div>

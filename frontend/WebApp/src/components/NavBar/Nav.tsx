@@ -75,9 +75,12 @@ const Nav = () => {
             <Link
                to="/"
                id="title"
-               className="text-4xl font-bold md:pl-1 md:pr-10 md:text-5xl"
+               className="hover:animate-pulse  text-4xl font-bold md:pl-1 md:pr-10 md:text-5xl"
             >
-               eShop
+               <span className=" font-normal italic text-yellow-400">
+                  e
+               </span>
+               Shop
             </Link>
 
             <div className="hidden w-9/12 items-center md:flex">
