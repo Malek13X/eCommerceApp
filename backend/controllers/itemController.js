@@ -1,4 +1,4 @@
-import { base, uploadDirect } from "@uploadcare/upload-client";
+import { uploadDirect } from "@uploadcare/upload-client";
 import {
    deleteFile,
    storeFile,
@@ -58,7 +58,7 @@ const addItem = asyncHandler(async (req, res) => {
    let savedItem;
    try {
       const { title, description, categories, price, quantity } = req.body;
-      const image = req.file;
+         const image = req.file;
 
       // const buffer = fileData ? fs.readFileSync(fileData.path) : "";
       console.log("Body", req.body);
@@ -92,13 +92,14 @@ const addItem = asyncHandler(async (req, res) => {
          throw new Error("All fields are required");
       }
 
-      const parsedCategories =
-         categories === "string" ? JSON.parse(categories) : categories;
       // Create new item in the database
       const newItem = new Item({
          title,
          description,
-         categories: parsedCategories,
+         categories:
+            typeof categories === "string"
+               ? JSON.parse(categories)
+               : categories,
          price,
          quantity,
          imageUrl: "Unknown",

@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import itemRoutes from "./routes/itemRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 import multer from "multer";
 
 const upload = multer({ dest: "uploads/" }); // specify the directory to save uploaded files
@@ -37,6 +38,7 @@ app.use(
 );
 
 app.use("/api/users", userRoutes);
+app.use("/api/cart", cartRoutes);
 app.use("/api/items/", upload.single("image"), itemRoutes);
 
 // //  Serve frontend

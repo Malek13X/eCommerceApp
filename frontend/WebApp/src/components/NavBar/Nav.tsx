@@ -16,7 +16,7 @@ import Categories from './Categories';
 import { signOut } from '../../features/user/authSlice';
 import SearchBar from './SearchBar';
 import ThemeMode from '../Functional/ThemeMode';
-import Cart from '../Functional/Cart';
+import Cart from './Cart';
 import UserMenu from '../Functional/UserMenu';
 import SignDropdown from './SignDropDown';
 
@@ -75,11 +75,9 @@ const Nav = () => {
             <Link
                to="/"
                id="title"
-               className="hover:animate-pulse  text-4xl font-bold md:pl-1 md:pr-10 md:text-5xl"
+               className="text-4xl  font-bold hover:animate-pulse md:pl-1 md:pr-10 md:text-5xl"
             >
-               <span className=" font-normal italic text-yellow-400">
-                  e
-               </span>
+               <span className=" font-normal italic  text-[#ffcb6b]">e</span>
                Shop
             </Link>
 
@@ -92,7 +90,7 @@ const Nav = () => {
 
             {/* Right Side of Nav */}
             <div id="nav-right" className="mr-1 flex   items-center    ">
-               <Cart theme={theme} />
+               {user && <Cart theme={theme} />}
 
                {!isMobileNavOpen ? (
                   <>
@@ -156,9 +154,9 @@ const Nav = () => {
                         </div>
                         <div
                            className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
-                           onClick={() => console.log(window.innerWidth)}
+                           onClick={() => navigate('/dashboard')}
                         >
-                           Print To Console
+                           Dashboard
                         </div>
                         <div
                            className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}

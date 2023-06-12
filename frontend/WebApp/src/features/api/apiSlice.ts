@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { INewItem, Item } from '../../services/types';
+import { Cart, INewItem, Item } from '../../services/types';
 import { RootState } from '../../app/store';
-export const itemsApi = createApi({
-   reducerPath: 'items',
+export const apiSlice = createApi({
+   reducerPath: 'api',
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
       prepareHeaders: (headers, { getState }) => {
@@ -17,7 +17,7 @@ export const itemsApi = createApi({
          return headers;
       }
    }),
-   tagTypes: ['Item'],
+   tagTypes: ['Item', 'Cart'],
    endpoints: (builder) => ({
       getItems: builder.query<Item[], string>({
          query: (search) => {
@@ -25,7 +25,8 @@ export const itemsApi = createApi({
                url: '/items',
                params: { search }
             };
-         }
+         },
+         providesTags: ['Item']
       }),
       addItem: builder.mutation<void, INewItem>({
          query: (item) => {
@@ -45,9 +46,11 @@ export const itemsApi = createApi({
                method: 'POST',
                body: formData
             };
-         }
+         },
+         invalidatesTags: ['Item']
       }),
-      editItem: builder.mutation<Item, Partial<Item> & Pick<Item, '_id'>>({
+
+      editItem: builder.mutation<Item, Item>({
          query: (item) => ({
             url: `/items/${item._id}`,
             method: 'PUT',
@@ -61,13 +64,55 @@ export const itemsApi = createApi({
             headers: {
                'Content-Type': 'application/json'
             }
-         })
+         }),
+         invalidatesTags: ['Item']
       }),
+
       deleteItem: builder.mutation<Item, string>({
          query: (itemId) => ({
             url: `/items/${itemId}`,
             method: 'DELETE'
-         })
+         }),
+         invalidatesTags: ['Item']
+      }),
+
+      createCart: builder.mutation<Cart, void>({
+         query: () => ({
+            url: `/cart/`,
+            method: 'POST'
+         }),
+         invalidatesTags: ['Cart']
+      }),
+
+      getCart: builder.query<Cart, void>({
+         query: () => {
+            return {
+               url: '/cart'
+            };
+         },
+         providesTags: ['Cart']
+      }),
+
+      addItemToCart: builder.mutation<
+         void,
+         { itemId: string; quantity: number }
+      >({
+         query: ({ itemId, quantity }) => {
+            return {
+               url: `/cart/items/${itemId}`,
+               method: 'PUT',
+               body: { quantity }
+            };
+         }
+      }),
+
+      removeItemFromCart: builder.mutation<void, string>({
+         query: (itemId) => {
+            return {
+               url: `/cart/items/${itemId}`,
+               method: 'DELETE'
+            };
+         }
       })
    })
 });
@@ -76,5 +121,9 @@ export const {
    useGetItemsQuery,
    useDeleteItemMutation,
    useAddItemMutation,
-   useEditItemMutation
-} = itemsApi;
+   useEditItemMutation,
+   useCreateCartMutation,
+   useGetCartQuery,
+   useAddItemToCartMutation,
+   useRemoveItemFromCartMutation
+} = apiSlice;

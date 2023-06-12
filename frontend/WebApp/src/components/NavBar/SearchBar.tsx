@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useGetItemsQuery } from '../../features/items/itemApi';
+import { useGetItemsQuery } from '../../features/api/apiSlice';
 import { Item } from '../../services/types';
 
 type props = {
@@ -7,7 +7,7 @@ type props = {
    barSize: string;
 };
 
-const SearchBar: React.FC<props> = ({ theme, barSize: size }) => {
+const SearchBar: React.FC<props> = ({ theme, barSize }) => {
    const [searchText, setSearchText] = useState('');
    const [showMenu, setShowMenu] = useState(false);
 
@@ -16,8 +16,6 @@ const SearchBar: React.FC<props> = ({ theme, barSize: size }) => {
       isLoading,
       error
    } = useGetItemsQuery(searchText, { skip: !searchText ? true : false });
-
-   useGetItemsQuery(searchText);
 
    const handleOnChangeSearch = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -41,7 +39,7 @@ const SearchBar: React.FC<props> = ({ theme, barSize: size }) => {
       <>
          <form
             className={`relative ${
-               size === 'big'
+               barSize === 'big'
                   ? 'hidden w-full md:block '
                   : 'mx-auto block w-full md:hidden'
             } `}
@@ -81,21 +79,35 @@ const SearchBar: React.FC<props> = ({ theme, barSize: size }) => {
 
                {/* Menu */}
                {showMenu && (
-                  <div className="absolute top-full left-0 z-10 max-h-80 w-full overflow-y-auto rounded-sm border border-gray-300 bg-slate-500">
+                  <div
+                     className={`absolute top-full left-0 z-10 max-h-80 w-full divide-y  divide-gray-500 overflow-y-auto  rounded-sm border border-gray-500 ${theme.mainBg}`}
+                  >
                      {items && items.length > 0 ? (
                         <>
-                           {items.map((item: Item) => (
-                              <div
-                                 key={item._id}
-                                 className="flex cursor-pointer items-center border-b-2 p-5 text-xs font-bold"
-                              >
-                                 <img
-                                    className="mr-2  w-16"
-                                    src={item.imageUrl + '-/preview/200x200/'}
-                                 />
-                                 <div>{item.title}</div>
-                              </div>
-                           ))}
+                           {items
+                              .filter((item: Item) => item.quantity != 0)
+                              .map((item: Item) => (
+                                 <div
+                                    key={item._id}
+                                    className="flex cursor-pointer items-center p-5 text-sm font-bold"
+                                 >
+                                    <img
+                                       className="mr-4 w-16 rounded"
+                                       src={
+                                          item.imageUrl + '-/preview/200x200/'
+                                       }
+                                    />
+                                    <div className="">
+                                       <div className='mb-1' >{item.title}</div>
+                                       <div className='ml-1 font-normal'>
+                                          {item.price.toLocaleString('en-US', {
+                                             style: 'currency',
+                                             currency: 'USD'
+                                          })}
+                                       </div>
+                                    </div>
+                                 </div>
+                              ))}
                         </>
                      ) : (
                         <div className=" p-2">

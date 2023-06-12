@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUp, reset } from '../features/user/authSlice';
 import { AppDispatch } from '../app/store';
+import { useCreateCartMutation } from '../features/api/apiSlice';
 
 const SignUp: React.FC<{ theme: any }> = ({ theme }) => {
    const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const SignUp: React.FC<{ theme: any }> = ({ theme }) => {
 
    const dispatch = useDispatch<AppDispatch>();
    const navigate = useNavigate();
-
+   const [createCart, { isLoading: isCreatingCart }] = useCreateCartMutation();
    const { user, isError, isSuccess, isLoading, message } = useSelector(
       (state: any) => state.auth || {}
    );
@@ -35,7 +36,9 @@ const SignUp: React.FC<{ theme: any }> = ({ theme }) => {
       }
 
       if (isSuccess) {
-         navigate('/');
+         createCart().then(() => {
+            navigate('/');
+         });
       }
 
       if (user != null) {

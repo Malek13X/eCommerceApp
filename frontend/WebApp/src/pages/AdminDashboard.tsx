@@ -3,25 +3,39 @@ import {
    useGetItemsQuery,
    useDeleteItemMutation,
    useEditItemMutation
-} from '../features/items/itemApi';
-import { INewItem, Item } from '../services/types';
+} from '../features/api/apiSlice';
+import { Item } from '../services/types';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-import { ImSpinner, ImSpinner2 } from 'react-icons/im';
+import { ImSpinner2 } from 'react-icons/im';
 
 import EditItemModal from '../components/Functional/EditItemModal';
 import ItemForm from '../components/Functional/ItemForm';
 
 const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
    const { data: items, isLoading, error, refetch } = useGetItemsQuery('');
-   const [selectedItemToDelete, setSelectedItemToDelete] = useState('');
-   const [showOutOfStock, setShowOutOfStock] = useState(false);
-   const [toggleAddItemForm, setToggleAddItemForm] = useState(false);
-
-   const [selectedItemToEdit, setSelectedItemToEdit] = useState<Item | null>();
+   const [editItem, { error: editError, isLoading: isEditing }] =
+      useEditItemMutation();
    const [
       deleteItem,
       { isLoading: isDeleting, error: deleteError, isSuccess: isDeleted }
    ] = useDeleteItemMutation();
+
+   const [toggleAddItemForm, setToggleAddItemForm] = useState(false);
+   const [selectedItemToEdit, setSelectedItemToEdit] = useState<Item | null>();
+   const [selectedItemToDelete, setSelectedItemToDelete] = useState('');
+
+   const [showOutOfStock, setShowOutOfStock] = useState(false);
+   const [filterProducts, setFilterProducts] = useState('');
+
+   // Handle Filtring Items
+   const handleFilterProducts = (
+      event: React.ChangeEvent<HTMLInputElement>
+   ) => {
+      setFilterProducts(event.target.value);
+   };
+   // ----------------------------------------------------
+
+   // Handle Item Delete
 
    const handleOnDelete = (itemId: string) => {
       setSelectedItemToDelete(itemId);
@@ -30,9 +44,25 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
          refetch();
       });
    };
+   // ----------------------------------------------------
+
+   // Handle Item Edit
+
    const handleOnEdit = (item: Item) => {
       setSelectedItemToEdit(item);
    };
+   const onEditItemSubmit = (event: React.FormEvent) => {
+      event.preventDefault();
+
+      if (selectedItemToEdit) {
+         editItem(selectedItemToEdit).then(() => {
+            setSelectedItemToEdit(null);
+            refetch();
+         });
+      }
+   };
+   // ----------------------------------------------------
+
    const checkStatus = (item: any) => {
       let hiddenStatus;
       let quantityStatus;
@@ -40,14 +70,14 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
       if (item.quantity === 0) {
          quantityStatus = (
             <div
-               className="my-2 h-4 w-4 rounded-full bg-red-500"
+               className="my-2 h-3 w-3 rounded-full bg-red-500 md:h-4 md:w-4"
                title="Out of stock"
             ></div>
          );
       } else if (item.quantity >= 1) {
          quantityStatus = (
             <div
-               className="my-2 h-4 w-4 rounded-full bg-green-500"
+               className="my-2 h-3 w-3 rounded-full bg-green-500 md:h-4 md:w-4"
                title="In stock"
             ></div>
          );
@@ -61,7 +91,9 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
       );
    };
 
-   useEffect(() => {}, [error, isDeleting]);
+   useEffect(() => {
+      console.log(error);
+   }, [error, isDeleting]);
 
    if (isLoading) {
       return (
@@ -71,76 +103,93 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
       );
    }
    return (
-      <div className="container mx-auto mt-10">
-         <div className=" flex justify-between whitespace-nowrap 2xl:px-32 ">
+      <div className={` ${theme.textColor} container  mx-auto mt-10 px-2 `}>
+         <div className=" flex justify-between whitespace-nowrap xl:px-32 ">
             <h1 className="mb-4 text-2xl font-semibold md:text-3xl">
                Product Dashboard
             </h1>
             <div className="flex ">
                <button
-                  className="mx-2 h-8 w-fit rounded-sm bg-green-500 py-2  px-2 text-xs  font-bold text-white shadow-lg hover:bg-green-700 md:h-10 md:text-base"
+                  className={`mx-2 h-8 w-fit rounded-sm bg-green-500 py-2  px-2 text-xs  font-bold text-white shadow-lg hover:bg-green-700 md:h-10 md:text-base`}
                   onClick={() => setToggleAddItemForm(true)}
                >
                   Add Item
                </button>
                <button
-                  className="h-8 w-fit rounded-sm bg-slate-500   px-2  text-xs capitalize shadow-lg hover:bg-slate-600 md:h-10  md:text-base"
+                  className="h-8 w-fit rounded-sm bg-teal-600 px-2  text-xs font-bold capitalize text-white shadow-lg  hover:bg-teal-800 md:h-10 md:text-base"
                   onClick={() => setShowOutOfStock(!showOutOfStock)}
                >
                   {showOutOfStock ? 'Show Out Of Stock' : 'Hide Out Of Stock'}
                </button>
             </div>
          </div>
-
-         <div className="mx-auto max-w-7xl">
+         <div className=" mx-auto max-w-7xl">
+            <div className="mb-5">
+               <div className="relative">
+                  <input
+                     type="text"
+                     id="filter-products"
+                     className={`z-20 block w-full rounded-sm text-slate-700 focus:dark:border-0 dark:focus:border-opacity-0 focus:dark:ring-2 focus:dark:ring-slate-400`}
+                     placeholder="Filter Products..."
+                     onChange={handleFilterProducts}
+                  />
+               </div>
+            </div>
             <div className="flex flex-col">
-               <div className="overflow-x-auto  shadow-md sm:rounded-lg">
-                  <div className="inline-block min-w-full align-middle">
-                     <div className="overflow-hidden ">
-                        <table className="min-w-full  table-fixed divide-y divide-gray-200 dark:divide-gray-700">
-                           <thead className="bg-gray-100 dark:bg-gray-700">
-                              <tr>
+               <div className="overflow-x-auto  shadow-md  sm:rounded-sm ">
+                  <div className="inline-block h-[500px]  min-w-full align-middle">
+                     <div className="mr-2 overflow-hidden rounded-md">
+                        <table className="min-w-full table-fixed   ">
+                           <thead
+                              className={`bg-teal-600 border-b-2  ${theme.borderColor} text-sm font-bold text-white mb-`}
+                           >
+                              <tr className="">
                                  <th
                                     scope="col"
-                                    className="py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400 md:px-3"
+                                    className=" py-3 pl-2 md:px-3 "
                                  >
                                     Status
                                  </th>
-                                 <th
-                                    scope="col"
-                                    className="py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-700  dark:text-gray-400 md:px-6"
-                                 >
+                                 <th scope="col" className="py-3 md:px-6">
                                     Product
                                  </th>
                                  <th
                                     scope="col"
-                                    className="py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400 md:px-3"
+                                    className="ont-bold py-3 md:px-3"
                                  >
                                     Quantity
                                  </th>
-                                 <th
-                                    scope="col"
-                                    className="py-3 px-5 text-center text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400 md:px-6"
-                                 >
+                                 <th scope="col" className="py-3 px-5 md:px-6">
                                     Price
                                  </th>
-                                 <th
-                                    scope="col"
-                                    className="py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400 md:px-6"
-                                 >
+                                 <th scope="col" className="py-3 md:px-6">
                                     Actions
                                  </th>
                               </tr>
                            </thead>
-                           <tbody className="w-40 divide-y divide-gray-200 bg-white dark:divide-gray-600 dark:bg-gray-800">
+                           <tbody
+                              className={`divide-y text-xs dark:divide-gray-600  ${theme.mainBg} md:text-sm`}
+                           >
                               {items
-                                 ?.filter((item) =>
-                                    showOutOfStock ? item.quantity > 0 : item
+                                 ?.filter((item: Item) =>
+                                    // showOutOfStock
+                                    //    ? item.quantity > 0
+                                    //    :
+                                    item.title
+                                       .toLowerCase()
+                                       .includes(filterProducts.toLowerCase())
                                  )
                                  .map((item) => (
                                     <tr
                                        key={item._id}
-                                       className={`hover:bg-gray-100 dark:hover:bg-gray-700  ${
+                                       hidden={
+                                          showOutOfStock && item.quantity === 0
+                                             ? true
+                                             : false
+                                       }
+                                       className={`${theme.hoverColor} ${
+                                          theme.hoverTextColor
+                                       } hover:bg-opacity-90 ${
                                           selectedItemToDelete &&
                                           selectedItemToDelete === item._id
                                              ? 'animate-pulse bg-gradient-to-r from-red-500 to-red-400'
@@ -151,33 +200,36 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                              : ''
                                        }`}
                                     >
-                                       <td className=" h-4 w-4 px-6 ">
+                                       <td className=" h-1 w-1 px-4 md:px-6 ">
                                           {checkStatus(item)}
                                        </td>
-                                       <td
-                                          className="flex  items-center truncate whitespace-nowrap py-4 px-6 text-sm font-medium text-gray-900 dark:text-white"
-                                          title={item.description}
-                                       >
+                                       <td className="-ml-5  flex items-center  truncate whitespace-nowrap py-4 px-6  font-medium md:-ml-0">
                                           <img
-                                             className="mr-5 w-20 rounded"
+                                             className="mr-5 w-14 rounded md:w-20"
+                                             title={item.description}
                                              src={
                                                 item.imageUrl +
                                                 '-/preview/200x200/'
                                              }
                                           />
-                                          {item.title}
+                                          <p className="" title={item.title}>
+                                             {item.title}
+                                          </p>
                                        </td>
 
-                                       <td className="whitespace-nowrap py-4  text-center text-sm font-medium text-gray-500 dark:text-white">
+                                       <td className="whitespace-nowrap py-4  text-center font-medium ">
                                           {item.quantity}
                                        </td>
-                                       <td className="whitespace-nowrap py-4  text-center text-sm font-medium text-gray-900 dark:text-white">
-                                          ${item.price}
+                                       <td className="whitespace-nowrap py-4 text-center  font-medium ">
+                                          {item.price.toLocaleString('en-US', {
+                                             style: 'currency',
+                                             currency: 'USD'
+                                          })}
                                        </td>
 
-                                       <td className="whitespace-nowrap py-4 text-center text-sm ">
+                                       <td className="whitespace-nowrap py-4 text-center  ">
                                           <button
-                                             className="mr-2 rounded bg-red-500 py-2 px-2 font-bold text-white hover:bg-red-700"
+                                             className="mr-2 rounded bg-red-500 py-2 px-2  text-white hover:bg-red-700"
                                              onClick={() =>
                                                 handleOnDelete(item._id)
                                              }
@@ -190,7 +242,7 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                              )}
                                           </button>
                                           <button
-                                             className="mx-2 rounded bg-blue-500 py-2 px-2 font-bold text-white hover:bg-blue-700"
+                                             className="mx-2 rounded bg-blue-500 py-2 px-2  text-white hover:bg-blue-700"
                                              onClick={() => handleOnEdit(item)}
                                           >
                                              {selectedItemToEdit?._id ===
@@ -210,8 +262,10 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                </div>
             </div>
             <EditItemModal
+               theme={theme}
                selectedItemToEdit={selectedItemToEdit}
                setSelectedItemToEdit={setSelectedItemToEdit}
+               onEditItemSubmit={onEditItemSubmit}
             />
             <ItemForm
                theme={theme}
@@ -219,6 +273,8 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                setToggleAddItemForm={setToggleAddItemForm}
             />
          </div>
+
+         
       </div>
    );
 };

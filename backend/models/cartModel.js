@@ -1,30 +1,43 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-const cartSchema = new Schema({
-   userId: {
-      type: String,
-   },
-   items: [
-      {
-         productId: {
-            type: String,
-         },
-         name: String,
-         quantity: {
-            type: Number,
-            required: true,
-            min: [1, "Quantity can not be less then 1."],
-            default: 1,
-         },
-         price: Number,
+const cartSchema = new Schema(
+   {
+      userId: {
+         type: String,
+         required: true,
+         unique: true, // Enforces on cart per user
       },
-   ],
-   bill: {
-      type: Number,
-      required: true,
-      default: 0,
+      items: [],
+      totalPrice: {
+         type: Number,
+         required: true,
+         default: 0,
+      },
+      createdAt: {
+         type: Date,
+         default: Date.now,
+      },
+      updatedAt: {
+         type: Date,
+         default: Date.now,
+      },
    },
-});
-const Cart = mongoose.model("cart", cartSchema);
+   { timestamps: true }
+);
+cartSchema.methods.calculateTotalPrice = function () {
+   const items = this.items || [];
+   let totalPrice = 0;
+
+   items.forEach((item) => {
+      const itemPrice = item.price || 0;
+      const itemQuantity = item.quantity || 1;
+      totalPrice += itemPrice * itemQuantity;
+   });
+
+   this.totalPrice = totalPrice;
+};
+
+const Cart = mongoose.model("Cart", cartSchema);
+
 export default Cart;

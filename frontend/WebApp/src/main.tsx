@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
 import { store } from './app/store';
-import { itemsApi } from './features/items/itemApi';
+import { apiSlice } from './features/api/apiSlice';
 
 const root = ReactDOM.createRoot(
    document.getElementById('root') as HTMLDivElement
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'development') {
       .then(() => {
          root.render(
             <Provider store={store}>
-               <ApiProvider api={itemsApi}>
+               <ApiProvider api={apiSlice}>
                   <App />
                </ApiProvider>
             </Provider>
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'development') {
       });
 } else {
    root.render(
-      <ApiProvider api={itemsApi}>
+      <ApiProvider api={apiSlice}>
          <Provider store={store}>
             <App />
          </Provider>

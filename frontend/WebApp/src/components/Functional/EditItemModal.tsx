@@ -1,100 +1,104 @@
-import React, { useEffect, useState } from 'react';
-import { useEditItemMutation } from '../../features/items/itemApi';
-import { IoMdClock, IoMdClose } from 'react-icons/io';
-import ItemForm from './ItemForm';
+import React, { useEffect } from 'react';
+import { IoMdClose } from 'react-icons/io';
 
 interface EditItemModalProps {
    selectedItemToEdit: any;
    setSelectedItemToEdit: (item: any) => void;
+   onEditItemSubmit: (event: React.FormEvent<Element>) => void;
+   theme: any;
 }
 
 const EditItemModal: React.FC<EditItemModalProps> = ({
    selectedItemToEdit,
-   setSelectedItemToEdit
+   setSelectedItemToEdit,
+   onEditItemSubmit,
+   theme
 }) => {
    if (!selectedItemToEdit) return null;
 
-   const [editCurrentItem, setEditCurrentItem] = useState(selectedItemToEdit);
-   const [editItem, { error, isLoading }] = useEditItemMutation();
    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
-      setEditCurrentItem((prevItem: any) => ({
+      setSelectedItemToEdit((prevItem: any) => ({
          ...prevItem,
          [name]: value
       }));
    };
-   useEffect(() => {
-      // console.log('Error:', error);
-   }, [editCurrentItem, error]);
 
-   const onSubmit = (event: React.FormEvent) => {
-      event.preventDefault();
-      editItem(editCurrentItem);
-      setSelectedItemToEdit(null);
+   const onTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const { name, value } = event.target;
+      setSelectedItemToEdit((prevItem: any) => ({
+         ...prevItem,
+         [name]: value
+      }));
    };
 
    return (
-      <div className="fixed  top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-         <div className="parent relative mx-3 flex max-w-7xl flex-col-reverse flex-wrap justify-between border border-slate-300 bg-slate-700 p-2  shadow-xl  md:flex-row md:flex-nowrap ">
+      <div className="fixed overflow-x-auto top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+         <div
+            className={`parent relative mx-3 overflow-hidden flex w-fit flex-col-reverse  md:flex-row flex-wrap justify-between border dark:${theme.textColor} ${theme.mainBg} ${theme.borderColor}  p-1 shadow-xl   `}
+         >
             <form
-               onSubmit={onSubmit}
-               key={editCurrentItem._id}
-               className="parent relative my-2 w-full  p-2 hover:bg-gray-100 dark:hover:bg-gray-700 md:mx-2 md:my-0 md:w-1/2"
+               onSubmit={onEditItemSubmit}
+               key={selectedItemToEdit._id}
+               className="parent relative my-2   p-2    "
             >
-               <div className=" my-5 md:my-1 md:p-5 ">
+               <div className=" my-5  pl-5 ">
                   <div className="flex items-center">
-                     <span className="pr-2 font-bold">Title:</span>
+                     <span className="pr-2 ">Title:</span>
                      <input
                         type="text"
                         name="title"
-                        value={editCurrentItem.title}
+                        value={selectedItemToEdit.title}
                         onChange={onChange}
-                        className="rounded border border-gray-300 px-2 py-1 text-slate-800"
+                        className="rounded border border-gray-300 px-2 py-1 text-slate-800 "
                      />
                   </div>
-                  <div className="flex items-center whitespace-nowrap py-4 text-center text-sm font-medium text-gray-500 dark:text-white">
-                     <span className="pr-2 font-bold">Quantity:</span>
+                  <div className="flex items-center whitespace-nowrap py-4 text-center text-sm  ">
+                     <span className="pr-2 ">Quantity:</span>
                      <input
                         type="number"
                         name="quantity"
-                        value={editCurrentItem.quantity}
+                        value={selectedItemToEdit.quantity}
                         onChange={onChange}
-                        className="rounded border border-gray-300 px-2 py-1 text-slate-800"
+                        className="rounded border border-gray-300 px-2 py-1 text-slate-800 "
                      />
                   </div>
-                  <div className="flex items-center whitespace-nowrap  text-center text-sm font-medium text-gray-900 dark:text-white">
-                     <span className="pr-2 font-bold">Price:</span>
+                  <div className="flex items-center whitespace-nowrap  text-center text-sm  ">
+                     <span className="pr-2 ">Price:</span>
                      <input
                         type="number"
                         name="price"
-                        value={editCurrentItem.price}
+                        value={selectedItemToEdit.price}
                         onChange={onChange}
-                        className="rounded border border-gray-300 px-2 py-1 text-slate-800"
+                        className="rounded border border-gray-300 px-2 py-1 text-slate-800 "
                      />
                   </div>
-                  <div className="flex items-center whitespace-nowrap text-center text-sm font-medium text-gray-900 dark:text-white">
-                     <span className="pr-2 font-bold">Description:</span>
+                  <div className="font- flex items-center whitespace-nowrap text-center text-sm">
+                     <span className="pr-2 ">Description:</span>
                      <textarea
                         name="description"
-                        value={editCurrentItem.description}
-                        onChange={onChange}
-                        className="my-6 rounded border border-gray-300  px-2 text-slate-800"
+                        value={selectedItemToEdit.description}
+                        onChange={onTextAreaChange}
+                        className="my-6 rounded border border-gray-300 px-2 text-sm text-slate-800 "
                      />
                   </div>
                </div>
 
                <button
                   type="submit"
-                  className="child absolute bottom-0 right-0 h-10 w-20 rounded-sm bg-blue-600 capitalize text-white shadow-xl hover:bg-blue-800 lg:m-5"
+                  className="child absolute bottom-0 right-0 md:mr-2 h-10 w-20 rounded-sm bg-blue-600 capitalize  shadow-xl hover:bg-blue-800 lg:m-5"
                >
                   Save
                </button>
             </form>
-            <div className="flex w-96  flex-wrap justify-end   md:w-1/2   ">
+            <div className="flex max-w-xs flex-wrap justify-end    ">
                <img
                   className="bg-gradient-to-tr from-slate-600 to-slate-400"
-                  src={editCurrentItem.imageUrl + '-/preview/400x400'}
-                  alt={editCurrentItem.title}
+                  src={
+                     selectedItemToEdit.imageUrl +
+                     '-/preview/800x800/-/progressive/yes/-/quality/lightest/'
+                  }
+                  alt={selectedItemToEdit.title}
                />
             </div>
             <IoMdClose

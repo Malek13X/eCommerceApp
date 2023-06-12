@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useAddItemMutation } from '../../features/items/itemApi';
+import { useAddItemMutation } from '../../features/api/apiSlice';
 import { INewItem } from '../../services/types';
 import { IoMdClose } from 'react-icons/io';
 import { BiLoaderCircle } from 'react-icons/bi';
@@ -90,13 +90,15 @@ const ItemForm: React.FC<props> = ({
    if (isLoading) {
       return (
          <div className="fixed top-0  left-0 right-0 bottom-0 flex  items-center justify-center bg-gray-900 bg-opacity-50 ">
-            <div className="flex h-40 flex-col  items-center justify-center border border-slate-300 bg-slate-700 px-32  shadow-xl  ">
+            <div
+               className={`flex h-40 ${theme.mainBg} flex-col ${theme.textColor} {theme.borderColor} items-center justify-center border px-32  shadow-xl  `}
+            >
                <div className="mx-2 my-5 flex text-xl font-bold">
                   <AiOutlineLoading className="animate-spin " size={40} />
                </div>
                <button
                   type="button"
-                  className="focus:shadow-outline h-10 rounded bg-slate-500 py-2 px-4 font-bold text-white hover:bg-slate-600 focus:outline-none"
+                  className="focus:shadow-outline h-10 rounded bg-red-600 py-2 px-4 font-bold text-white hover:bg-red-800 focus:outline-none"
                >
                   Cancel
                </button>
@@ -108,166 +110,182 @@ const ItemForm: React.FC<props> = ({
       return <></>;
    }
    return (
-      <div className="fixed top-0  left-0 right-0 bottom-0 flex  items-center justify-center bg-gray-900 bg-opacity-50 md:scale-100">
-         <div className="parent relative mx-3 flex  border border-slate-300 bg-slate-700 p-2  shadow-xl  ">
+      <div className="fixed top-0 left-0  right-0 bottom-0 flex items-center  justify-center overflow-x-auto bg-gray-900 bg-opacity-50 ">
+         <div
+            className={`parent relative mx-3 flex   border  ${theme.borderColor} ${theme.mainBg}  shadow-xl  `}
+         >
             <form
                onSubmit={handleSubmit}
-               className={`${theme.mainBg} ${theme.textColor} max-w-prose p-10`}
+               className={`${theme.mainBg} ${theme.textColor} max-w-prose p-5`}
             >
-               <div className=" mb-4 items-center">
-                  <label htmlFor="title" className="flex-1 ">
-                     Title
-                  </label>
-                  <input
-                     required
-                     type="text"
-                     id="title"
-                     name="title"
-                     value={newItem.title}
-                     onChange={handleInfoChange}
-                     className="w-full rounded-lg border border-gray-500 px-3 py-2 text-slate-600 focus:border-blue-400 focus:outline-none"
-                  />
-               </div>
+               <div id="Left-side" className="md:1/2">
+                  <div className=" mb-4 items-center">
+                     <label htmlFor="title" className="flex-1 ">
+                        Title
+                     </label>
+                     <input
+                        required
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={newItem.title}
+                        onChange={handleInfoChange}
+                        className="w-full rounded-lg border border-gray-500 px-3 py-2 text-slate-700 focus:border-blue-400 focus:outline-none"
+                     />
+                  </div>
 
-               <div className="mb-4">
-                  <label htmlFor="description" className="">
-                     Description
-                  </label>
-                  <input
-                     required
-                     id="description"
-                     name="description"
-                     type="text"
-                     value={newItem.description}
-                     onChange={handleInfoChange}
-                     className="w-full rounded-lg border border-gray-500 px-3 py-2 text-slate-600 focus:border-blue-400 focus:outline-none"
-                  />
-               </div>
+                  <div className="mb-4">
+                     <label htmlFor="description" className="">
+                        Description
+                     </label>
+                     <input
+                        required
+                        id="description"
+                        name="description"
+                        type="text"
+                        value={newItem.description}
+                        onChange={handleInfoChange}
+                        className="w-full rounded-lg border border-gray-500 px-3 py-2 text-slate-700 focus:border-blue-400 focus:outline-none"
+                     />
+                  </div>
 
-               <div className="mb-4 border p-3">
-                  <label htmlFor="categories" className="">
-                     Categories
-                  </label>
-                  <div>
-                     <div className="text-md  mb-3 flex w-full flex-wrap ">
-                        {newItem.categories.map((category) => (
-                           <span
-                              key={category}
-                              className="mr-2 mb-2 whitespace-nowrap rounded-lg border-2 border-blue-500 px-2"
-                           >
-                              {category}
+                  <div className="mb-4 border p-3">
+                     <label htmlFor="categories" className="">
+                        Categories
+                     </label>
+                     <div>
+                        <div className="text-md  mb-3 flex w-full flex-wrap ">
+                           {newItem.categories.map((category) => (
+                              <span
+                                 key={category}
+                                 className="mr-2 mb-2 whitespace-nowrap rounded-md bg-blue-500  py-[2px] px-2  text-white"
+                              >
+                                 {category}
+                                 <button
+                                    type="button"
+                                    className="ml-2  text-red-600"
+                                    onClick={() =>
+                                       handleCategoryDelete(category)
+                                    }
+                                 >
+                                    &times;
+                                 </button>
+                              </span>
+                           ))}
+                        </div>
+                        <div>
+                           <div className="flex">
+                              <input
+                                 required={
+                                    newItem.categories.length === 0
+                                       ? true
+                                       : false
+                                 }
+                                 className="w-full rounded-lg text-slate-700"
+                                 name="categories"
+                                 type="text"
+                                 value={newCategory}
+                                 onChange={(e) =>
+                                    setNewCategory(e.target.value)
+                                 }
+                                 placeholder="Enter a category"
+                              />
                               <button
                                  type="button"
-                                 className="ml-2  text-red-600"
-                                 onClick={() => handleCategoryDelete(category)}
+                                 className="focus:shadow-outline ml-1 rounded-lg bg-blue-500 py-2 px-3 font-bold text-white hover:bg-blue-600 focus:outline-none"
+                                 onClick={handleCategoryAdd}
                               >
-                                 &times;
+                                 Add
                               </button>
-                           </span>
-                        ))}
-                     </div>
-                     <div>
-                        <div className="flex">
-                           <input
-                              required={
-                                 newItem.categories.length === 0 ? true : false
-                              }
-                              className="w-full rounded-lg text-slate-700"
-                              name="categories"
-                              type="text"
-                              value={newCategory}
-                              onChange={(e) => setNewCategory(e.target.value)}
-                              placeholder="Enter a category"
-                           />
-                           <button
-                              type="button"
-                              className="focus:shadow-outline ml-1 rounded-lg bg-blue-500 py-2 px-3 font-bold text-white hover:bg-blue-600 focus:outline-none"
-                              onClick={handleCategoryAdd}
-                           >
-                              Add
-                           </button>
+                           </div>
                         </div>
                      </div>
                   </div>
                </div>
-               <div className="mb-4">
-                  <label htmlFor="quantity" className="">
-                     Quantity
-                  </label>
-                  <input
-                     required
-                     type="number"
-                     name="quantity"
-                     id="quantity"
-                     value={newItem.quantity}
-                     className="block w-full rounded-md border-gray-500 px-6 py-2 text-slate-600 focus:border-blue-400 focus:outline-none"
-                     onChange={handleInfoChange}
-                  />
-               </div>
 
-               <div className="mb-4">
-                  <label htmlFor="price" className="">
-                     Price
-                  </label>
-                  <div className="relative mt-1 rounded-md shadow-sm">
-                     <span className="absolute inset-y-0 left-0  flex items-center pl-3 text-slate-600 ">
-                        $
-                     </span>
-                     <input
-                        required
-                        type="number"
-                        name="price"
-                        id="price"
-                        value={newItem.price}
-                        step="0.01"
-                        className="block w-full rounded-md border-gray-500 px-6 py-2 text-slate-600 focus:border-blue-400 focus:outline-none"
-                        onChange={handleInfoChange}
-                     />
-                     <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-600">
-                        USD
-                     </span>
-                  </div>
-               </div>
-
-               {!newItem.image ? (
+               <div id="right-side" className="md:w-1/2">
                   <div className="mb-4">
-                     <label htmlFor="image" className="">
-                        Image
+                     <label htmlFor="quantity" className="">
+                        Quantity
                      </label>
                      <input
                         required
-                        type="file"
-                        name="image"
-                        id="image"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="mt-2 w-full text-slate-600"
+                        type="number"
+                        name="quantity"
+                        id="quantity"
+                        value={newItem.quantity}
+                        className="block w-full rounded-md border-gray-500 px-6 py-2 text-slate-700 focus:border-blue-400 focus:outline-none"
+                        onChange={handleInfoChange}
                      />
                   </div>
-               ) : (
-                  <label htmlFor="image" className=" relative h-60 bg-gray-100">
-                     <img
-                        className="my-2 h-60 object-cover"
-                        src={URL.createObjectURL(newItem.image)}
-                        alt="Selected Image"
-                     />
-                     <input
-                        type="file"
-                        name="image"
-                        id="image"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                     />
-                  </label>
-               )}
 
-               <button
-                  type="submit"
-                  className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-600 focus:outline-none"
-               >
-                  Submit
-               </button>
+                  <div className="mb-4">
+                     <label htmlFor="price" className="">
+                        Price
+                     </label>
+                     <div className="relative mt-1 rounded-md shadow-sm">
+                        <span className="absolute inset-y-0 left-0  flex items-center pl-3 text-slate-700 ">
+                           $
+                        </span>
+                        <input
+                           required
+                           type="number"
+                           name="price"
+                           id="price"
+                           value={newItem.price}
+                           step="0.01"
+                           className="block w-full rounded-md border-gray-500 px-6 py-2 text-slate-700 focus:border-blue-400 focus:outline-none"
+                           onChange={handleInfoChange}
+                        />
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-700">
+                           USD
+                        </span>
+                     </div>
+                  </div>
+
+                  {!newItem.image ? (
+                     <div className="mb-4">
+                        <label htmlFor="image" className="">
+                           Image
+                        </label>
+                        <input
+                           required
+                           type="file"
+                           name="image"
+                           id="image"
+                           accept="image/*"
+                           onChange={handleImageChange}
+                           className="mt-2 w-full text-slate-700 "
+                        />
+                     </div>
+                  ) : (
+                     <label
+                        htmlFor="image"
+                        className=" relative h-60 bg-gray-100"
+                     >
+                        <img
+                           className="my-2 h-60 object-cover"
+                           src={URL.createObjectURL(newItem.image)}
+                           alt="Selected Image"
+                        />
+                        <input
+                           type="file"
+                           name="image"
+                           id="image"
+                           accept="image/*"
+                           onChange={handleImageChange}
+                           className="hidden"
+                        />
+                     </label>
+                  )}
+
+                  <button
+                     type="submit"
+                     className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-600 focus:outline-none"
+                  >
+                     Submit
+                  </button>
+               </div>
             </form>
             <IoMdClose
                className="child absolute right-0 top-0 h-7 w-9 rounded-sm bg-red-500 capitalize shadow-xl hover:bg-red-700"
