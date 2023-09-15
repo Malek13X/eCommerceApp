@@ -157,13 +157,48 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
          }
          cart.items = cart.items.filter((item) => item._id.toString() !== id);
 
-         // const index = cart.items.findIndex(
-         //    (item) => item._id.toString() === _id
-         // );
-         // if (index !== -1) {
-         //    cart.items.splice(index, 1);
-         //    cart.items.pop(index);
-         // }
+         await cart.calculateTotalPrice();
+         await cart.save();
+
+         res.status(200).json(cart);
+      } else {
+         res.status(404);
+         throw new Error("User doesn't exist");
+      }
+   } catch (error) {
+      res.status(500);
+      throw new Error(error);
+   }
+});
+// @desc Remove all items from cart
+// @route DELETE /api/cart/removeAll
+// @access Public
+const removeAllItemsFromCart = asyncHandler(async (req, res) => {
+   try {
+      let userId;
+      if (
+         req.headers.authorization &&
+         req.headers.authorization.startsWith("Bearer")
+      ) {
+         const token = req.headers.authorization.split(" ")[1];
+
+         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+         const user = await User.findById(decoded.userId);
+         userId = user._id;
+      } else {
+         res.status(400);
+         throw new Error("Invalid token");
+      }
+
+      if (userId) {
+         // Check the user cart
+         const cart = await Cart.findOne({ userId });
+
+         if (!cart) {
+            res.status(404);
+            throw new Error("Cart not found");
+         }
+         cart.items = [];
 
          await cart.calculateTotalPrice();
          await cart.save();
@@ -178,7 +213,6 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
       throw new Error(error);
    }
 });
-
 // @desc Get cart
 // @route GET /api/cart/
 // @access Public
@@ -217,4 +251,10 @@ const getCart = asyncHandler(async (req, res) => {
    }
 });
 
-export { createCart, addItemToCart, removeItemFromCart, getCart };
+export {
+   createCart,
+   addItemToCart,
+   removeItemFromCart,
+   removeAllItemsFromCart,
+   getCart,
+};

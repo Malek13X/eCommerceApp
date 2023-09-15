@@ -1,13 +1,17 @@
-import { Item } from '../../services/types';
+import { INewOrder, Item } from '../../services/types';
 
 import {
    useGetItemsQuery,
    useAddItemToCartMutation,
    useGetCartQuery,
-   useRemoveItemFromCartMutation
+   useRemoveItemFromCartMutation,
+   useCreateOrderMutation,
+   useRemoveAllItemsFromCartMutation
 } from '../../features/api/apiSlice';
 import { ImSpinner2 } from 'react-icons/im';
 import { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 type props = {
    setToggleCart: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,6 +29,8 @@ const CartSlideOver: React.FC<props> = ({
    }
    const [selectedItemToEdit, setSelectedItemToEdit] = useState('');
    const [selectedItemToRemove, setSelectedItemToRemove] = useState('');
+   const navigate = useNavigate();
+   const { user } = useSelector((state: any) => state.auth);
 
    const {
       data: cartData,
@@ -32,7 +38,7 @@ const CartSlideOver: React.FC<props> = ({
       error,
       isFetching,
 
-      refetch
+      refetch: refetchCart
    } = useGetCartQuery();
 
    const [
@@ -49,7 +55,8 @@ const CartSlideOver: React.FC<props> = ({
       data: itemsData,
       isLoading: isLoadingGetItems,
 
-      error: getItemsError
+      error: getItemsError,
+      refetch: refetchItems
    } = useGetItemsQuery('');
 
    const [
@@ -61,6 +68,25 @@ const CartSlideOver: React.FC<props> = ({
          isError: isRemoveError
       }
    ] = useRemoveItemFromCartMutation();
+   const [
+      removeAllItemsFromCart,
+      {
+         isLoading: isRemovingItems,
+         isSuccess: isItemsRemoved,
+         error: removingItemsError,
+         isError: isItemsRemoveError
+      }
+   ] = useRemoveAllItemsFromCartMutation();
+
+   const [
+      createOrder,
+      {
+         isLoading: isOrdering,
+         isSuccess: isOrdered,
+         error: orderError,
+         isError: isOrderError
+      }
+   ] = useCreateOrderMutation();
 
    const updateQuantity = (itemId: string, newQuantity: number) => {
       setSelectedItemToEdit(itemId);
@@ -70,7 +96,7 @@ const CartSlideOver: React.FC<props> = ({
             console.log(removingItemError);
             setSelectedItemToEdit('');
          }
-         refetch();
+         refetchCart();
          setSelectedItemToEdit('');
       });
    };
@@ -81,7 +107,7 @@ const CartSlideOver: React.FC<props> = ({
          if (isRemoveError) {
             console.log(addError);
          }
-         refetch();
+         refetchCart();
          setSelectedItemToRemove('');
       });
    };
@@ -95,9 +121,44 @@ const CartSlideOver: React.FC<props> = ({
       return optionList;
    };
 
-   useEffect(() => {
-      console.log('\nItemID:', selectedItemToEdit);
-   }, [isAdded, isAddError, selectedItemToEdit]);
+   const disableCheckout = () => {
+      return (
+         isLoading ||
+         isAdding ||
+         isOrdering ||
+         isRemovingItem ||
+         isRemovingItems
+      );
+   };
+
+   const handleCheckout = () => {
+      if (cartData && cartData.items.length > 0) {
+         const items = cartData.items.map((item) => {
+            return { itemId: item._id, quantity: item.quantity };
+         });
+         const order: INewOrder = {
+            userId: user._id,
+            items: items,
+            totalPrice: cartData.totalPrice
+         };
+         createOrder(order).then(() => {
+            setToggleCart(false);
+            if (isOrdered) {
+               console.log('Order was Succesful!!');
+            }
+         });
+      }
+      // if (!isOrdered || isOrderError) {
+      //    throw new Error('Frontend >> handleCheckout : Order Failed!');
+      // }
+      removeAllItemsFromCart().then(() => refetchCart());
+      refetchItems();
+      window.location.reload();
+   };
+
+   // useEffect(() => {
+   //    console.log('\nItemID:', selectedItemToEdit);
+   // }, [isAdded, isAddError, selectedItemToEdit]);
 
    return (
       <div>
@@ -107,25 +168,11 @@ const CartSlideOver: React.FC<props> = ({
             role="dialoxg"
             aria-modal="true"
          >
-            {/* Background backdrop, show/hide based on slide-over state. */}
-            {/* Entering: "ease-in-out duration-500" */}
-            {/* From: "opacity-0" */}
-            {/* To: "opacity-100" */}
-            {/* Leaving: "ease-in-out duration-500" */}
-            {/* From: "opacity-100" */}
-            {/* To: "opacity-0" */}
             <div className="fixed  inset-0 bg-slate-700 bg-opacity-75 transition-opacity"></div>
 
             <div className=" fixed inset-0 overflow-hidden">
                <div className="absolute inset-0 overflow-hidden">
                   <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                     {/* Slide-over panel, show/hide based on slide-over state. */}
-                     {/* Entering: "transform transition ease-in-out duration-500 sm:duration-700" */}
-                     {/* From: "translate-x-full" */}
-                     {/* To: "translate-x-0" */}
-                     {/* Leaving: "transform transition ease-in-out duration-500 sm:duration-700" */}
-                     {/* From: "translate-x-0" */}
-                     {/* To: "translate-x-full" */}
                      <div className="pointer-events-auto w-screen max-w-md">
                         <div
                            className={`flex h-full flex-col overflow-y-scroll ${theme.mainBg} ${theme.textColor}  shadow-xl`}
@@ -165,7 +212,7 @@ const CartSlideOver: React.FC<props> = ({
                                  </div>
                               </div>
 
-                              {cartData ? (
+                              {cartData && cartData.items.length > 0 ? (
                                  <div className="mt-8 ">
                                     <div className="flow-root">
                                        <ul
@@ -177,9 +224,11 @@ const CartSlideOver: React.FC<props> = ({
                                                 key={item._id}
                                                 className="flex py-6"
                                              >
-                                                <div className="h-24 w-24  flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                <div
+                                                   className={`h-24 w-24 flex-shrink-0  overflow-hidden rounded-md border-2 p-1 ${theme.borderColor}`}
+                                                >
                                                    <img
-                                                      className="h-full w-full  object-cover object-center"
+                                                      className="h-full w-full  object-contain object-center"
                                                       title={item.description}
                                                       src={
                                                          item.imageUrl +
@@ -197,7 +246,10 @@ const CartSlideOver: React.FC<props> = ({
                                                             </a>
                                                          </h3>
                                                          <div className="ml-4">
-                                                            {item.price.toLocaleString(
+                                                            {(
+                                                               item.quantity *
+                                                               item.price
+                                                            ).toLocaleString(
                                                                'en-US',
                                                                {
                                                                   style: 'currency',
@@ -277,7 +329,7 @@ const CartSlideOver: React.FC<props> = ({
                                                       ) : (
                                                          <button
                                                             type="button"
-                                                            className={`font-medium text-teal-600 hover:text-teal-500`}
+                                                            className={`font-medium text-red-600 hover:text-red-500`}
                                                             onClick={() =>
                                                                handleRemoveItem(
                                                                   item._id
@@ -324,18 +376,13 @@ const CartSlideOver: React.FC<props> = ({
                                  Shipping and taxes calculated at checkout.
                               </p>
                               <div className="mt-6">
-                                 <a
-                                    href="#"
-                                    className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
-                                    onClick={() =>
-                                       addItemToCart({
-                                          itemId: '646fc0f6ec235e683ef9eac6',
-                                          quantity: 3
-                                       })
-                                    }
+                                 <button
+                                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700 disabled:bg-teal-800 disabled:hover:bg-teal-800 "
+                                    disabled={disableCheckout()}
+                                    onClick={() => handleCheckout()}
                                  >
                                     Checkout
-                                 </a>
+                                 </button>
                               </div>
                            </div>
                         </div>

@@ -41,8 +41,8 @@ img {
    height: 10px;
 }
 .reverse-shadow {
-   box-shadow: -4px 4px 27px 20px  rgba(26, 26, 26, 0.1);
- }
+   box-shadow: -4px 4px 27px 20px rgba(26, 26, 26, 0.1);
+}
 /* Track */
 ::-webkit-scrollbar-track {
    background: #595e5e;

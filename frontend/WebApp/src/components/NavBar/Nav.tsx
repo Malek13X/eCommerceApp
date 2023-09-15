@@ -8,9 +8,6 @@ import { AppDispatch } from '../../app/store';
 // UI Components and Icons
 import { MdClose } from 'react-icons/md';
 import { BiMenu, BiUserCircle } from 'react-icons/bi';
-import { IoMdArrowDropdown } from 'react-icons/io';
-import { BsMoon, BsSun } from 'react-icons/bs';
-import { switchTheme } from '../../features/UISlice';
 import { darkTheme, lightTheme } from '../../components/data';
 import Categories from './Categories';
 import { signOut } from '../../features/user/authSlice';
@@ -28,7 +25,9 @@ const Nav = () => {
 
    const [isProfileOpen, setIsProfileOpen] = useState(false);
    const [isMobileMode, setIsMobileMode] = useState(false);
+   const [showMenu, setShowMenu] = useState(false);
 
+   const handleShowMenu = (toggle: boolean) => setShowMenu(toggle);
    // Get user from State
    const { user } = useSelector((state: any) => state.auth);
 
@@ -38,6 +37,34 @@ const Nav = () => {
    const { themeMode } = useSelector((state: any) => state.UI);
    const theme = themeMode === 'dark' ? darkTheme : lightTheme;
 
+   const catMenu = useRef<HTMLDivElement | null>(null);
+
+   const closeOpenMenus = (e: MouseEvent) => {
+      if (
+         catMenu.current &&
+         isProfileOpen &&
+         !catMenu.current.contains(e.target as Node)
+      ) {
+         setIsProfileOpen(false);
+      }
+
+      if (
+         catMenu.current &&
+         isMobileNavOpen &&
+         !catMenu.current.contains(e.target as Node)
+      ) {
+         setIsMobileNavOpen(false);
+      }
+      if (
+         catMenu.current &&
+         showMenu &&
+         !catMenu.current.contains(e.target as Node)
+      ) {
+         setShowMenu(false);
+      }
+   };
+
+   document.addEventListener('mousedown', closeOpenMenus);
    useEffect(() => {
       if (!token) {
          dispatch(signOut());
@@ -75,14 +102,19 @@ const Nav = () => {
             <Link
                to="/"
                id="title"
-               className="text-4xl  font-bold hover:animate-pulse md:pl-1 md:pr-10 md:text-5xl"
+               className="text-4xl font-bold  md:pl-1 md:pr-10 md:text-5xl"
             >
                <span className=" font-normal italic  text-[#ffcb6b]">e</span>
                Shop
             </Link>
 
             <div className="hidden w-9/12 items-center md:flex">
-               <SearchBar theme={theme} barSize={'big'} />
+               <SearchBar
+                  showMenu={showMenu}
+                  handleShowMenu={handleShowMenu}
+                  theme={theme}
+                  barSize={'big'}
+               />
                <div className="pl-3">
                   <ThemeMode size="big" style="md:pr-6   " />
                </div>
@@ -96,7 +128,10 @@ const Nav = () => {
                   <>
                      {user ? (
                         <>
-                           <div className="hidden bg-opacity-30 md:flex md:pr-1">
+                           <div
+                              ref={catMenu}
+                              className="hidden bg-opacity-30 md:flex md:pr-1"
+                           >
                               <div
                                  onClick={() =>
                                     setIsProfileOpen(!isProfileOpen)
@@ -129,10 +164,16 @@ const Nav = () => {
 
          {isMobileNavOpen ? (
             <div
+               ref={catMenu}
                className={`menu ${theme.mainBg} border-b-[1px] dark:bg-opacity-70 ${theme.borderColor} h-fill py-3`}
             >
                <div className="mr-3 ml-3  flex items-center">
-                  <SearchBar theme={theme} barSize={'small'} />
+                  <SearchBar
+                     showMenu={showMenu}
+                     handleShowMenu={handleShowMenu}
+                     theme={theme}
+                     barSize={'small'}
+                  />
 
                   <ThemeMode size="small" style="" />
                </div>
@@ -143,20 +184,15 @@ const Nav = () => {
                         <BiUserCircle className="ml-2 h-7 w-7" />
                      </div>
                      <div
-                        className={` mx-10 -mt-1 mb-5 border-b ${theme.borderColor} opacity-30`}
+                        className={` mx-20 -mt-1 mb-5 border-b ${theme.borderColor} opacity-30`}
                      />
 
                      <div className={` text-center text-lg opacity-90`}>
                         <div
                            className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
+                           onClick={() => navigate('/account')}
                         >
                            Account
-                        </div>
-                        <div
-                           className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
-                           onClick={() => navigate('/dashboard')}
-                        >
-                           Dashboard
                         </div>
                         <div
                            className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
@@ -165,9 +201,19 @@ const Nav = () => {
                         </div>
                         <div
                            className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
+                           onClick={() => navigate('/orders')}
                         >
-                           About
+                           Orders History
                         </div>
+                        <div
+                           className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
+                           onClick={() => navigate('/admin/dashboard')}
+                        >
+                           Admin Dashboard
+                        </div>
+                        <div
+                           className={` mx-20 mt-2 mb-5 border-b ${theme.borderColor} opacity-30`}
+                        />
                         <div
                            className={`cursor-check h-10 cursor-pointer  hover:opacity-50`}
                            onClick={() => dispatch(signOut())}
@@ -214,3 +260,4 @@ const Nav = () => {
 };
 
 export default Nav;
+``;

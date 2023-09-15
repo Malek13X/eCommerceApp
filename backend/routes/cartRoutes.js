@@ -5,6 +5,7 @@ import {
    addItemToCart,
    removeItemFromCart,
    getCart,
+   removeAllItemsFromCart,
 } from "../controllers/cartController.js";
 
 const router = Router();
@@ -14,5 +15,6 @@ router.get("/", getCart);
 router.post("/", createCart);
 router.put("/items/:id", addItemToCart);
 router.delete("/items/:id", removeItemFromCart);
+router.delete("/items/", removeAllItemsFromCart);
 
 export default router;

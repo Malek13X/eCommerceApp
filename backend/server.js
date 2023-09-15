@@ -7,6 +7,7 @@ import session from "express-session";
 import connectDB from "./config/db.js";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 import itemRoutes from "./routes/itemRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import multer from "multer";
@@ -39,6 +40,7 @@ app.use(
 
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 app.use("/api/items/", upload.single("image"), itemRoutes);
 
 // //  Serve frontend

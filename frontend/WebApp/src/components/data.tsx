@@ -39,8 +39,8 @@ export const lightTheme = {
    primaryColor: '[#eeeeee]',
    secondaryColor: 'slate-700',
    borderColor: 'border-slate-800',
-   bgColor: 'bg-gray-100',
-   mainBg: 'bg-slate-200',
+   bgColor: 'bg-slate-100',
+   mainBg: 'bg-white',
 
    textColor: 'text-slate-700',
    hoverColor: 'hover:bg-gray-700',
@@ -68,3 +68,22 @@ export interface ITheme {
    textColor: string;
    hoverColor: string;
 }
+
+export const allowedCategories = [
+   'Electronics',
+   'Fashion',
+   'Home & Furniture',
+   'Beauty & Personal Care',
+   'Sports & Outdoors',
+   'Health & Wellness',
+   'Books, Movies & Music',
+   'Toys & Games',
+   'Automotive & Tools',
+   'Jewelry & Watches',
+   'Food & Beverages',
+   'Pet Supplies',
+   'Baby & Kids',
+   'Gifts & Occasions',
+   'Art & Collectibles',
+   'Office & School Supplies'
+];

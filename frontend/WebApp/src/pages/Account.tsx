@@ -5,10 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { updateUserProfile } from '../features/user/authSlice';
 import { AppDispatch } from '../app/store';
 import Phone from '../components/Functional/Phone';
+import {
+   useGetAllOrdersQuery,
+   useGetOrderByIdQuery
+} from '../features/api/apiSlice';
 
 // import Layout from "../components/Layout";
 
-const Profile: React.FC<{ theme: any }> = ({ theme }) => {
+const Account: React.FC<{ theme: any }> = ({ theme }) => {
    // State variables for collapsible sections
    const [openPanel, setOpenPanel] = useState(1);
    const [errorMessage, setErrorMessage] = useState('');
@@ -34,9 +38,16 @@ const Profile: React.FC<{ theme: any }> = ({ theme }) => {
 
    const navigate = useNavigate();
    const dispatch = useDispatch<AppDispatch>();
-   
 
-   
+   const {
+      data: getAllOrders,
+      isLoading: isLoadingOrders,
+      error,
+      isFetching,
+
+      refetch
+   } = useGetAllOrdersQuery(user._id);
+
    useEffect(() => {
       if (isError) {
          if ('message'.includes('400')) {
@@ -69,13 +80,15 @@ const Profile: React.FC<{ theme: any }> = ({ theme }) => {
          const userData = {
             firstName,
             lastName,
-            phone: phoneInfo.number ? `${phoneInfo.region} ${phoneInfo.number}` : user.phone,
+            phone: phoneInfo.number
+               ? `${phoneInfo.region} ${phoneInfo.number}`
+               : user.phone,
             email,
             password
          };
          dispatch(updateUserProfile(userData));
       }
-       
+
       // Clear form inputs after submission
       setUpdatedInfo({
          firstName: '',
@@ -88,7 +101,7 @@ const Profile: React.FC<{ theme: any }> = ({ theme }) => {
    };
 
    return (
-      <div className="mx-0 py-20  max-w-7xl lg:mx-auto">
+      <div className="mx-0 max-w-7xl  py-20 lg:mx-auto">
          {/* Personal Information Panel */}
          <div className="mb-4">
             <button
@@ -142,14 +155,14 @@ const Profile: React.FC<{ theme: any }> = ({ theme }) => {
             </Transition>
          </div>
 
-         {/* Whishlist Panel */}
-         <div className="mb-4">
+         {/* Orders Panel */}
+         {/* <div className="mb-4">
             <button
                type="button"
                className={`flex w-full justify-between rounded-sm ${theme.mainBg} ${theme.textColor} over:dark:bg-opacity-70 px-4 py-4 text-left font-medium focus:outline-none focus-visible:ring  focus-visible:ring-opacity-50`}
                onClick={() => setOpenPanel(openPanel === 2 ? 0 : 2)}
             >
-               <span className="px-5 text-xl">Wishlist</span>
+               <span className="px-5 text-xl">Orders History</span>
                <svg
                   className={`h-5 w-5 ${
                      openPanel === 2 ? 'rotate-180 transform' : ''
@@ -173,41 +186,21 @@ const Profile: React.FC<{ theme: any }> = ({ theme }) => {
                   } rounded-b-sm ${theme.mainBg} px-16 py-2 `}
                >
                   <ul>
-                     <li className="my-2 justify-between bg-slate-400 bg-opacity-30 px-2 py-4 md:flex md:px-12">
-                        <h3>GTX 1060 Ti</h3>
-                        <div className="md:text-md flex  w-2/6 items-center justify-between whitespace-nowrap text-sm ">
-                           <p>$39.99</p>
-                           <button>Add to Cart</button>
-                        </div>
-                     </li>
-                     <li className="my-2 justify-between bg-opacity-30 px-2 py-4 md:flex md:px-12">
-                        <h3>GTX 1080 Ti</h3>
-                        <div className="md:text-md flex  w-2/6 items-center justify-between whitespace-nowrap text-sm ">
-                           <p>$39.99</p>
-                           <button>Add to Cart</button>
-                        </div>
-                     </li>
-                     <li className="my-2 justify-between bg-slate-400 bg-opacity-30  px-2  py-4 md:flex md:px-12">
-                        <h3>Asus Motherboard Z105</h3>
-                        <div className="md:text-md flex  w-2/6 items-center justify-between whitespace-nowrap text-sm ">
-                           <p>$39.99</p>
-                           <button>Add to Cart</button>
-                        </div>
-                     </li>
-                     <li className="my-2 justify-between bg-opacity-30 px-2  py-4 md:flex md:px-12">
-                        <h3 className="">
-                           Royal Kludge KR84 Mechanical Keyboard (Brown
-                           Switches)
-                        </h3>
-                        <div className="md:text-md flex  w-2/6 items-center justify-between whitespace-nowrap text-sm ">
-                           <p>$39.99</p>
-                           <button>Add to Cart</button>
-                        </div>
-                     </li>
+                     {getAllOrders?.map((order) => (
+                        <li
+                           key={order._id}
+                           className="my-2 justify-between bg-slate-400 bg-opacity-30 px-2 py-4 md:flex md:px-12"
+                        >
+                           <h3>OrderId:{order._id}</h3>
+                           <div className="md:text-md flex  w-2/6 items-center justify-between whitespace-nowrap text-sm ">
+                              <p>${order.totalPrice}</p>
+                           </div>
+                        </li>
+                     ))}
                   </ul>
                </div>
             </Transition>
-         </div>
+         </div> */}
 
          {/* Settings Panel */}
 
@@ -482,4 +475,4 @@ const Profile: React.FC<{ theme: any }> = ({ theme }) => {
       </div>
    );
 };
-export default Profile;
+export default Account;

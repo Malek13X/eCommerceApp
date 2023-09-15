@@ -1,32 +1,39 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import mongoose from "mongoose";
 
-const orderSchema = new Schema({
+const orderSchema = new mongoose.Schema({
    userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
    },
    items: [
       {
-         productId: {
-            type: String,
+         itemId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Item",
+            required: true,
          },
-         name: String,
          quantity: {
             type: Number,
             required: true,
-            min: [1, "Quantity can not be less then 1."],
          },
-         price: Number,
       },
    ],
-   bill: {
+   // shippingAddress: {
+   //    type: String,
+   //    required: true,
+   // },
+   totalPrice: {
       type: Number,
       required: true,
    },
-   date_added: {
+   orderDate: {
       type: Date,
       default: Date.now,
    },
+   // Add other fields as needed for your specific use case.
 });
-const Order = mongoose.model("order", orderSchema);
-export default Order
+
+const Order = mongoose.model("Order", orderSchema);
+
+export default Order;

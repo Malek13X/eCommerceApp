@@ -5,11 +5,17 @@ import { Item } from '../../services/types';
 type props = {
    theme: any;
    barSize: string;
+   showMenu: boolean;
+   handleShowMenu: (toggle: boolean) => void;
 };
 
-const SearchBar: React.FC<props> = ({ theme, barSize }) => {
+const SearchBar: React.FC<props> = ({
+   theme,
+   barSize,
+   showMenu,
+   handleShowMenu
+}) => {
    const [searchText, setSearchText] = useState('');
-   const [showMenu, setShowMenu] = useState(false);
 
    const {
       data: items,
@@ -28,10 +34,10 @@ const SearchBar: React.FC<props> = ({ theme, barSize }) => {
    };
 
    useEffect(() => {
-      if (searchText) {
-         setShowMenu(true);
+      if (searchText.length > 0) {
+         handleShowMenu(true);
       } else {
-         setShowMenu(false);
+         handleShowMenu(false);
       }
    }, [items, searchText]);
 
@@ -53,6 +59,7 @@ const SearchBar: React.FC<props> = ({ theme, barSize }) => {
                   placeholder="Search Product..."
                   onChange={handleOnChangeSearch}
                   required
+                  autoComplete="off"
                />
 
                <button
@@ -80,7 +87,7 @@ const SearchBar: React.FC<props> = ({ theme, barSize }) => {
                {/* Menu */}
                {showMenu && (
                   <div
-                     className={`absolute top-full left-0 z-10 max-h-80 w-full divide-y  divide-gray-500 overflow-y-auto  rounded-sm border border-gray-500 ${theme.mainBg}`}
+                     className={`absolute top-full left-0 z-10 max-h-80 w-full divide-y  divide-gray-500 overflow-y-auto  rounded-sm border border-gray-500  ${theme.bgColor}`}
                   >
                      {items && items.length > 0 ? (
                         <>
@@ -98,8 +105,11 @@ const SearchBar: React.FC<props> = ({ theme, barSize }) => {
                                        }
                                     />
                                     <div className="">
-                                       <div className='mb-1' >{item.title}</div>
-                                       <div className='ml-1 font-normal'>
+                                       <div className="text-md mb-1">
+                                          {item.title}
+                                       </div>
+
+                                       <div className="ml-1 font-normal">
                                           {item.price.toLocaleString('en-US', {
                                              style: 'currency',
                                              currency: 'USD'

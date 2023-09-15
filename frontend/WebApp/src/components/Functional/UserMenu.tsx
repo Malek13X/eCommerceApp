@@ -34,10 +34,10 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
             >
                <li>
                   <Link
-                     to="/profile"
+                     to="/account"
                      className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
                   >
-                     Profile
+                     Account
                   </Link>
                </li>
                <li>
@@ -49,20 +49,20 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
                   </a>
                </li>
                <li>
-                  <a
-                     href="#"
+                  <Link
+                     to="/orders"
                      className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
                   >
-                     History
-                  </a>
+                     Orders History
+                  </Link>
                </li>
                {user.role === 'admin' ? (
                   <li>
                      <Link
-                        to="/dashboard"
+                        to="/admin/dashboard"
                         className={`text-md block px-4 py-2 font-medium hover:opacity-80 `}
                      >
-                        Dashboard
+                        Admin Dashboard
                      </Link>
                   </li>
                ) : (

@@ -1,28 +1,30 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Cart, INewItem, Item } from '../../services/types';
+import { Cart, INewItem, INewOrder, Item, Order } from '../../services/types';
 import { RootState } from '../../app/store';
+
 export const apiSlice = createApi({
    reducerPath: 'api',
+
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
       prepareHeaders: (headers, { getState }) => {
          const state = getState() as RootState;
-         const token = state.auth.user.token;
+         const token = state.auth.user?.token;
 
          if (token) {
             headers.set('Authorization', `Bearer ${token}`);
+            return headers;
          }
-
-         // Remove the 'Content-Type' header as it will be set automatically by 'FormData'
-         return headers;
       }
    }),
-   tagTypes: ['Item', 'Cart'],
+   tagTypes: ['Item', 'Cart', 'Order'],
+
    endpoints: (builder) => ({
       getItems: builder.query<Item[], string>({
          query: (search) => {
             return {
                url: '/items',
+               method: 'GET',
                params: { search }
             };
          },
@@ -37,7 +39,7 @@ export const apiSlice = createApi({
 
             formData.append('title', item.title);
             formData.append('description', item.description);
-            formData.append('categories', JSON.stringify(item.categories));
+            formData.append('category', item.category);
             formData.append('price', String(item.price));
             formData.append('quantity', String(item.quantity));
 
@@ -57,7 +59,7 @@ export const apiSlice = createApi({
             body: JSON.stringify({
                title: item.title,
                description: item.description,
-               categories: item.categories,
+               category: item.category,
                price: item.price,
                quantity: item.quantity
             }),
@@ -113,6 +115,36 @@ export const apiSlice = createApi({
                method: 'DELETE'
             };
          }
+      }),
+      removeAllItemsFromCart: builder.mutation<void, void>({
+         query: () => {
+            return {
+               url: `/cart/items/`,
+               method: 'DELETE'
+            };
+         }
+      }),
+      createOrder: builder.mutation<void, INewOrder>({
+         query: (order) => ({
+            url: '/orders',
+            method: 'POST',
+            body: order
+         }),
+         invalidatesTags: ['Order']
+      }),
+
+      getOrderById: builder.query<Order, string>({
+         query: (orderId) => ({
+            url: `/orders/${orderId}`
+         }),
+         providesTags: ['Order']
+      }),
+      getAllOrders: builder.query<Order[], string>({
+         query: (userId) => ({
+            url: `/orders/user/${userId}`,
+            method: 'GET'
+         }),
+         providesTags: ['Order']
       })
    })
 });
@@ -125,5 +157,9 @@ export const {
    useCreateCartMutation,
    useGetCartQuery,
    useAddItemToCartMutation,
-   useRemoveItemFromCartMutation
+   useRemoveItemFromCartMutation,
+   useRemoveAllItemsFromCartMutation,
+   useCreateOrderMutation,
+   useGetOrderByIdQuery,
+   useGetAllOrdersQuery
 } = apiSlice;

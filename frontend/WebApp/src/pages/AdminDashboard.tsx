@@ -141,7 +141,7 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                      <div className="mr-2 overflow-hidden rounded-md">
                         <table className="min-w-full table-fixed   ">
                            <thead
-                              className={`bg-teal-600 border-b-2  ${theme.borderColor} text-sm font-bold text-white mb-`}
+                              className={`border-b-2 bg-teal-600  ${theme.borderColor} mb- text-sm font-bold text-white`}
                            >
                               <tr className="">
                                  <th
@@ -152,6 +152,12 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                  </th>
                                  <th scope="col" className="py-3 md:px-6">
                                     Product
+                                 </th>
+                                 <th
+                                    scope="col"
+                                    className="ont-bold py-3 md:px-3"
+                                 >
+                                    Category
                                  </th>
                                  <th
                                     scope="col"
@@ -189,7 +195,7 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                        }
                                        className={`${theme.hoverColor} ${
                                           theme.hoverTextColor
-                                       } hover:bg-opacity-90 ${
+                                       } hover:bg-opacity-90  ${
                                           selectedItemToDelete &&
                                           selectedItemToDelete === item._id
                                              ? 'animate-pulse bg-gradient-to-r from-red-500 to-red-400'
@@ -203,7 +209,7 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                        <td className=" h-1 w-1 px-4 md:px-6 ">
                                           {checkStatus(item)}
                                        </td>
-                                       <td className="-ml-5  flex items-center  truncate whitespace-nowrap py-4 px-6  font-medium md:-ml-0">
+                                       <td className="-ml-5  mr-10 flex  items-center whitespace-nowrap  py-4 px-6  font-medium md:-ml-0">
                                           <img
                                              className="mr-5 w-14 rounded md:w-20"
                                              title={item.description}
@@ -212,22 +218,27 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                                                 '-/preview/200x200/'
                                              }
                                           />
-                                          <p className="" title={item.title}>
+                                          <p
+                                             className=""
+                                             title={item.description}
+                                          >
                                              {item.title}
                                           </p>
                                        </td>
-
-                                       <td className="whitespace-nowrap py-4  text-center font-medium ">
+                                       <td className="whitespace-nowrap px-4 py-4  text-center font-medium ">
+                                          {item.category}
+                                       </td>
+                                       <td className="`py-4 whitespace-nowrap px-4  text-center font-medium ">
                                           {item.quantity}
                                        </td>
-                                       <td className="whitespace-nowrap py-4 text-center  font-medium ">
+                                       <td className="whitespace-nowrap  px-4 py-4 text-center  font-medium ">
                                           {item.price.toLocaleString('en-US', {
                                              style: 'currency',
                                              currency: 'USD'
                                           })}
                                        </td>
 
-                                       <td className="whitespace-nowrap py-4 text-center  ">
+                                       <td className="whitespace-nowrap py-4 px-4 text-center  ">
                                           <button
                                              className="mr-2 rounded bg-red-500 py-2 px-2  text-white hover:bg-red-700"
                                              onClick={() =>
@@ -273,8 +284,6 @@ const AdminDashboard: React.FC<{ theme: any }> = ({ theme }) => {
                setToggleAddItemForm={setToggleAddItemForm}
             />
          </div>
-
-         
       </div>
    );
 };

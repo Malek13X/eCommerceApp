@@ -14,29 +14,23 @@ import sharp from "sharp";
 const getItems = asyncHandler(async (req, res) => {
    try {
       const { search } = req.query;
-      let token;
-      let isAdmin = false;
-      if (
-         req.headers.authorization &&
-         req.headers.authorization.startsWith("Bearer")
-      ) {
-         token = req.headers.authorization.split(" ")[1];
+      // let token;
+      // let isAdmin = false;
+      // if (
+      //    req.headers.authorization &&
+      //    req.headers.authorization.startsWith("Bearer")
+      // ) {
+      //    token = req.headers.authorization.split(" ")[1];
 
-         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-         isAdmin = decoded.userRole === "admin" ? true : false;
-      }
+      //    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      //    isAdmin = decoded.userRole === "admin" ? true : false;
+      // }
 
       let query = Item.find().sort({ title: 1 });
-
-      // if (!isAdmin) {
-      //    query = query.where("isHidden").equals(false);
-      // }
 
       if (search) {
          query = query.regex("title", new RegExp(search, "i"));
       }
-
-      // query = query.where("").equals(false);
 
       query.exec((err, items) => {
          if (err) {
@@ -57,8 +51,8 @@ const getItems = asyncHandler(async (req, res) => {
 const addItem = asyncHandler(async (req, res) => {
    let savedItem;
    try {
-      const { title, description, categories, price, quantity } = req.body;
-         const image = req.file;
+      const { title, description, category, price, quantity } = req.body;
+      const image = req.file;
 
       // const buffer = fileData ? fs.readFileSync(fileData.path) : "";
       console.log("Body", req.body);
@@ -69,10 +63,10 @@ const addItem = asyncHandler(async (req, res) => {
       let buffer = null;
       if (image) {
          const imageFormat = image.mimetype.split("/")[1]; // Extract the image format from the MIME type
-         if (imageFormat !== "jpeg") {
+         if (imageFormat !== "jpeg" || imageFormat !== "png") {
             buffer = await sharp(image.path)
-               .flatten({ background: { r: 223, g: 232, b: 232 } })
-               .jpeg()
+               // .flatten({ background: { r: 223, g: 232, b: 232 } })
+               // .jpeg()
                .toBuffer();
          } else {
             buffer = await sharp(image.path).toBuffer();
@@ -83,7 +77,7 @@ const addItem = asyncHandler(async (req, res) => {
       if (
          !title ||
          !description ||
-         !categories ||
+         !category ||
          !price ||
          !quantity ||
          !buffer
@@ -96,10 +90,7 @@ const addItem = asyncHandler(async (req, res) => {
       const newItem = new Item({
          title,
          description,
-         categories:
-            typeof categories === "string"
-               ? JSON.parse(categories)
-               : categories,
+         category,
          price,
          quantity,
          imageUrl: "Unknown",
@@ -111,8 +102,8 @@ const addItem = asyncHandler(async (req, res) => {
          publicKey: process.env.UPLOADCARE_PUBLIC_KEY,
          fileName: image ? image.originalname : "Unknown",
          metadata: {
-            categories,
             title,
+            category,
             mongoDb_Id: savedItem?._id,
          },
       });
@@ -140,7 +131,7 @@ const updateItem = asyncHandler(async (req, res) => {
       const {
          title,
          description,
-         categories,
+         category,
          price,
          quantity,
 
@@ -153,13 +144,14 @@ const updateItem = asyncHandler(async (req, res) => {
          item.title = title || item.title;
          item.description = description || item.description;
          item.price = price || item.price;
+         item.category = category || item.category;
          item.quantity = quantity || item.quantity;
 
          // item.imageUrl = imageUrl || Item.imageUrl;
          // item.imageUUID = imageUUID || Item.imageUUID;
       } else {
          res.status(400);
-         throw new Error("User does not exist");
+         throw new Error("Item does not exist");
       }
 
       const updatedItem = await item.save();
