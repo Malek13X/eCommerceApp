@@ -1,5 +1,5 @@
 # eShop - MERN Stack E-commerce Web App
-
+ 
 Welcome to eShop, an e-commerce web application built using the MERN stack. This project, created for educational purposes, leverages Redux Toolkit for API and state management, Tailwind CSS for styling, and Uploadcare to facilitate image handling, including product image storage in MongoDB as image URLs along with product info.
 
 <img src='https://ucarecdn.com/e167eba5-e480-4ae9-9086-5bfd950bc70d/-/preview/1200x1200/-/quality/smart_retina/-/format/auto/' width='720' >
