@@ -109,7 +109,6 @@ The project's folder structure is organized as follows:
 
 -  **backend**: Contains the back-end code.
 -  **frontend**: Contains the front-end code.
--  **public**: Contains public assets and the HTML template.
 -  **uploads**: Stores uploaded images.
 -  **README.md**: The main documentation file you are currently reading.
 
