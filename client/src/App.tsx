@@ -12,7 +12,7 @@ import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Account from './pages/Account';
 import AdminDashboard from './pages/AdminDashboard';
-import Nav from './components/NavBar//Nav';
+import Nav from './components/NavBar/Nav';
 
 import { darkTheme, lightTheme } from './components/data';
 import { useSelector } from 'react-redux';

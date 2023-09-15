@@ -8,7 +8,7 @@ import { AppDispatch } from '../../app/store';
 // UI Components and Icons
 import { MdClose } from 'react-icons/md';
 import { BiMenu, BiUserCircle } from 'react-icons/bi';
-import { darkTheme, lightTheme } from '../../components/data';
+import { darkTheme, lightTheme } from '../data';
 import Categories from './Categories';
 import { signOut } from '../../features/user/authSlice';
 import SearchBar from './SearchBar';

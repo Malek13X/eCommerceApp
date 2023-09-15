@@ -1,6 +1,5 @@
 import React from 'react';
 import { Item } from '../services/types';
-import Categories from './NavBar/Categories';
 import {
    useAddItemToCartMutation,
    useGetCartQuery
@@ -8,30 +7,8 @@ import {
 import { MdOutlineAddShoppingCart } from 'react-icons/md';
 import { palenightPalette } from './data';
 import { ImSpinner2 } from 'react-icons/im';
-import { BsCheckLg } from 'react-icons/bs';
-import { FaCheck } from 'react-icons/fa';
-import { HiOutlineCheck } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
 
-// Accessing colors from palenightPalette
-const {
-   Black,
-   DarkGray,
-   DarkGreen,
-   DarkYellow,
-   DarkBlue,
-   DarkCyan,
-   Gray,
-   White,
-   Red,
-   DarkRed,
-   Yellow,
-   Green,
-   Cyan,
-   Blue,
-   Magenta,
-   DarkMagenta
-} = palenightPalette;
+import { Link } from 'react-router-dom';
 
 interface Props {
    item: Item;
