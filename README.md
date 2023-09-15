@@ -119,7 +119,7 @@ This project is built with the following technologies:
 - **Redux Toolkit Query**: For handling API request  .
 - **Tailwind CSS**: For styling and responsive design.
 - **Uploadcare**: For handling and storing product image URLs in MongoDB.
-- **Passport.js**: For user authentication.
+- **authMiddleware**: For user authentication.
 - **JWT**: JSON Web Tokens for secure user authentication.
 - **Bcrypt**: For password hashing.
 
