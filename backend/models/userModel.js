@@ -76,7 +76,7 @@ const userSchema = mongoose.Schema(
          validate: [
             {
                validator: (value) => {
-                  //example of what value should look like: LB +961 81922609
+                  //example of what value should look like: LB +961 81555555
                   if (value) {
                      const countryCode = value.split(" ")[0];
                      const dialCode = value.split(" ")[1];
@@ -127,18 +127,16 @@ userSchema.path("password").validate(function (value) {
 
 // Modify properties before saving to the database
 userSchema.pre("save", async function (next) {
-   // Add password hashin
+   // Add password hashing
    if (!this.isModified("password")) {
       next();
    }
    const salt = await bcrypt.genSalt(10);
    this.password = await bcrypt.hash(this.password, salt);
 
-   // Lowercase firstName and lastName
    this.firstName = this.firstName.toLowerCase();
    this.lastName = this.lastName.toLowerCase();
 
-   // Lowercase the email
    if (this.email) {
       this.email = this.email.toLowerCase();
    }

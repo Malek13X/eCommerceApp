@@ -11,7 +11,6 @@ const UserMenu: React.FC<{ user: any; theme: any }> = ({ user, theme }) => {
    const onSignOutClick = () => {
       dispatch(signOut());
       navigate('/');
-      // ? window.location.reload(false);
    };
 
    return (

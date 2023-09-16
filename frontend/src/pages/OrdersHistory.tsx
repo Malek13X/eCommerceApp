@@ -61,7 +61,7 @@ const OrdersHistory: React.FC<{ theme: any }> = ({ theme }) => {
       const year = String(parsedDate.getFullYear());
       const hour = String(parsedDate.getHours() % 12 || 12).padStart(2, '0'); // Convert to 12-hour format
       const minutes = String(parsedDate.getMinutes()).padStart(2, '0');
-      const period = parsedDate.getHours() >= 12 ? 'PM' : 'AM'; // Determine AM or PM
+      const period = parsedDate.getHours() >= 12 ? 'PM' : 'AM'; 
 
       return `${day}/${month}/${year} - ${hour}:${minutes} ${period}`;
    };

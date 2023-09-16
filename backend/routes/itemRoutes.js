@@ -18,6 +18,4 @@ router.put("/:id", updateItem);
 router.delete("/:id", deleteItem);
 router.put("/image", uploadImageTest); // ? TESTING REQUEST ONLY
 
-//router.put("/items/:id", updateItem);
-
 export default router;

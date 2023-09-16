@@ -6,7 +6,7 @@ const cartSchema = new Schema(
       userId: {
          type: String,
          required: true,
-         unique: true, // Enforces on cart per user
+         unique: true,
       },
       items: [],
       totalPrice: {

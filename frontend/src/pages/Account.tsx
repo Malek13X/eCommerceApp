@@ -10,10 +10,7 @@ import {
    useGetOrderByIdQuery
 } from '../features/api/apiSlice';
 
-// import Layout from "../components/Layout";
-
 const Account: React.FC<{ theme: any }> = ({ theme }) => {
-   // State variables for collapsible sections
    const [openPanel, setOpenPanel] = useState(1);
    const [errorMessage, setErrorMessage] = useState('');
    const [phoneInfo, setPhoneInfo] = useState({
@@ -21,7 +18,6 @@ const Account: React.FC<{ theme: any }> = ({ theme }) => {
       number: ''
    });
 
-   // State variables for form inputs
    const [updatedInfo, setUpdatedInfo] = useState({
       firstName: '',
       lastName: '',
@@ -70,7 +66,6 @@ const Account: React.FC<{ theme: any }> = ({ theme }) => {
       }));
    };
 
-   // Handler function for form submission
    const onUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
@@ -89,7 +84,6 @@ const Account: React.FC<{ theme: any }> = ({ theme }) => {
          dispatch(updateUserProfile(userData));
       }
 
-      // Clear form inputs after submission
       setUpdatedInfo({
          firstName: '',
          lastName: '',
@@ -154,53 +148,6 @@ const Account: React.FC<{ theme: any }> = ({ theme }) => {
                )}
             </Transition>
          </div>
-
-         {/* Orders Panel */}
-         {/* <div className="mb-4">
-            <button
-               type="button"
-               className={`flex w-full justify-between rounded-sm ${theme.mainBg} ${theme.textColor} over:dark:bg-opacity-70 px-4 py-4 text-left font-medium focus:outline-none focus-visible:ring  focus-visible:ring-opacity-50`}
-               onClick={() => setOpenPanel(openPanel === 2 ? 0 : 2)}
-            >
-               <span className="px-5 text-xl">Orders History</span>
-               <svg
-                  className={`h-5 w-5 ${
-                     openPanel === 2 ? 'rotate-180 transform' : ''
-                  }`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-               >
-                  <path
-                     fillRule="evenodd"
-                     d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                     clipRule="evenodd"
-                  />
-               </svg>
-            </button>
-            <Transition show={openPanel === 2}>
-               <div
-                  className={`${
-                     openPanel === 2 ? 'invesible' : ''
-                  } rounded-b-sm ${theme.mainBg} px-16 py-2 `}
-               >
-                  <ul>
-                     {getAllOrders?.map((order) => (
-                        <li
-                           key={order._id}
-                           className="my-2 justify-between bg-slate-400 bg-opacity-30 px-2 py-4 md:flex md:px-12"
-                        >
-                           <h3>OrderId:{order._id}</h3>
-                           <div className="md:text-md flex  w-2/6 items-center justify-between whitespace-nowrap text-sm ">
-                              <p>${order.totalPrice}</p>
-                           </div>
-                        </li>
-                     ))}
-                  </ul>
-               </div>
-            </Transition>
-         </div> */}
 
          {/* Settings Panel */}
 

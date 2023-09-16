@@ -1,10 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { navLinks } from './data';
 import {
    AiOutlineMenuUnfold,
    AiOutlineMenuFold,
-   AiFillProfile
 } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from '../features/user/authSlice';
@@ -210,23 +208,6 @@ function Header() {
                            alt="alt placeholder"
                            className="mx-auto mb-5 h-6 w-6"
                         />
-
-                        {/* Links */}
-                        {navLinks?.map(({ title, link, icon }, id) => (
-                           <Link
-                              key={id}
-                              to={link}
-                              className={`flex cursor-pointer items-center rounded px-2 text-sm hover:bg-gray-200 hover:text-gray-700`}
-                           >
-                              <span className="rounded-full bg-gray-200 p-2">
-                                 {icon}
-                              </span>
-                              <span className="mx-1">{title}</span>
-                           </Link>
-                        ))}
-
-                        {/* After all nav links if you want any button or link then it will come here */}
-                        <div></div>
                      </div>
                   </div>
                </div>

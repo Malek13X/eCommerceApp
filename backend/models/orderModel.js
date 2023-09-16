@@ -31,7 +31,6 @@ const orderSchema = new mongoose.Schema({
       type: Date,
       default: Date.now,
    },
-   // Add other fields as needed for your specific use case.
 });
 
 const Order = mongoose.model("Order", orderSchema);

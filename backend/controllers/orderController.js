@@ -13,26 +13,7 @@ const createOrder = asyncHandler(async (req, res) => {
          items,
          totalPrice,
       });
-      // order.validate(async (error) => {
-      //    if (error) {
-      //       // Handle validation error
-      //       console.error(error);
-      //    } else {
-      //       // Save the order if it passes validation
-      //       order
-      //          .save()
-      //          .then((o) => {
-      //             // Order saved successfully
 
-      //             res.status(201).json(o);
-      //          })
-      //          .catch((error) => {
-      //             // Handle other errors, if any
-      //             console.error(error);
-      //          });
-
-      //       }
-      //    });
       await order.items.forEach(async (i) => {
          const item = await Item.findById(i.itemId);
 
@@ -56,7 +37,6 @@ const createOrder = asyncHandler(async (req, res) => {
    }
 });
 
-// Get orders for a specific user
 const getOrdersByUser = asyncHandler(async (req, res) => {
    const { userId } = req.params;
 
@@ -71,14 +51,12 @@ const getAllOrdersByUserId = async (req, res) => {
    try {
       const { userId } = req.params;
 
-      // Check if the user exists
       const user = await User.findById(userId);
       if (!user) {
          res.status(404).json({ error: "User not found" });
          return;
       }
 
-      // Fetch all orders for the user
       const orders = await Order.find({ userId });
 
       res.json(orders);

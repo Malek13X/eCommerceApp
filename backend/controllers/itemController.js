@@ -14,17 +14,6 @@ import sharp from "sharp";
 const getItems = asyncHandler(async (req, res) => {
    try {
       const { search } = req.query;
-      // let token;
-      // let isAdmin = false;
-      // if (
-      //    req.headers.authorization &&
-      //    req.headers.authorization.startsWith("Bearer")
-      // ) {
-      //    token = req.headers.authorization.split(" ")[1];
-
-      //    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      //    isAdmin = decoded.userRole === "admin" ? true : false;
-      // }
 
       let query = Item.find().sort({ title: 1 });
 
