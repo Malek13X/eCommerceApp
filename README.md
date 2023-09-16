@@ -14,7 +14,6 @@ Welcome to eShop, an e-commerce web application built using the MERN stack. This
 -  [Installation](#installation)
 -  [Folder Structure](#folder-structure)
 -  [Technologies Used](#technologies-used)
--  [Contributing](#contributing)
 -  [License](#license)
 
 ## Introduction
