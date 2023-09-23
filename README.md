@@ -24,12 +24,12 @@ eShop is an e-commerce web application designed to provide a seamless online sho
 
 ### User Authentication
 
--  **Sign Up**: Users can create new accounts with a unique username and password.
+-  **Sign Up**: Users can create new accounts with a email and password.
 -  **Sign In**: Registered users can securely log in to their accounts.
 
 ### User Account Management
 
--  **User Profile**: Users can view and update their profiles, including personal information and profile pictures.
+-  **User Profile**: Users can view and update their profiles, including personal information.
 -  **Password Reset**: Forgot your password? Users can request a password reset email.
 
 ### Admin Dashboard
