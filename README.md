@@ -128,8 +128,5 @@ This project is built with the following technologies:
 -  **JWT**: JSON Web Tokens for secure user authentication.
 -  **Bcrypt**: For password hashing.
 
-## License
-
-This project is licensed under the MIT License.
 
 Happy shopping! 🛒🛍️
